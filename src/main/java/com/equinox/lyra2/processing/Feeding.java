@@ -9,18 +9,11 @@ import java.util.ArrayList;
 
 public class Feeding {
 
-    public static ArrayList<Double> feedForward(LyraModel model, Object input) throws LyraWrongDatatypeException {
+    public static ArrayList<Double> feedForward(LyraModel model, ArrayList<Double> binaryData) throws LyraWrongDatatypeException {
         Essentials.logger.logString("Feeding forward...");
 
         //Checks to make sure the model is valid
         ModelChecker.checkModel(model);
-
-        //Convert the input into binary
-        ModelChecker.checkInputType(model, input);
-        ArrayList<Double> binaryData;
-        binaryData = DatatypeConversion.convertToBinaryArray(model.frontLayer.inputType, input);
-
-        Essentials.logger.logVerbose("Input converted to binary...", Config.VERBOSE);
 
         //Loops through the neurons in the front layer and sets their value to the previously set input
         for (int i = 0; i < model.frontLayer.neurons.size(); i++) {
