@@ -67,14 +67,14 @@ public class Test {
 
         Training.trainModel(model, data, outputData, 200000, 0.01);
 
-        ArrayList<Double> output1 = null;
+        ArrayList<Double> output1;
         try {
             output1 = Feeding.feedForward(model, data1); //Should print 1,0
         } catch (LyraWrongDatatypeException e) {
             throw new RuntimeException(e);
         }
-        for (int i = 0; i < output1.size(); i++) {
-            System.out.println(output1.get(i));
+        for (Double aDouble : output1) {
+            System.out.println(aDouble);
         }
 
     }

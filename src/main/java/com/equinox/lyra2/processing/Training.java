@@ -99,7 +99,7 @@ public class Training {
                     ArrayList<Double> prevActivations = layerActivations.get(layerIdx);
                     ArrayList<Double> deltas = allDeltas.get(layerIdx);
 
-                    // In weight and bias updates:
+                    //Loops through neurons
                     for (int j = 0; j < currentLayer.neurons.size(); j++) {
                         Neuron neuron = currentLayer.neurons.get(j);
                         double delta = clipGradient(deltas.get(j), 1.0);

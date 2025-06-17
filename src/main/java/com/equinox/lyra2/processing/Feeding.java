@@ -7,10 +7,11 @@ import com.equinox.lyra2.pojo.LyraModel;
 
 import java.util.ArrayList;
 
+import static com.equinox.lyra2.Config.VERBOSE;
+
 public class Feeding {
 
     public static ArrayList<Double> feedForward(LyraModel model, ArrayList<Double> binaryData) throws LyraWrongDatatypeException {
-        Essentials.logger.logString("Feeding forward...");
 
         //Checks to make sure the model is valid
         ModelChecker.checkModel(model);
@@ -20,12 +21,9 @@ public class Feeding {
             model.frontLayer.neurons.get(i).value = binaryData.get(i);
         }
 
-        Essentials.logger.logVerbose("Input set to neurons...", Config.VERBOSE);
-
         //--BEGINNING OF ACTUAL FEEDFORWARD--
         //Loops through every layer in the model.
         for (int i = 0; i < model.layers.size(); i++) {
-            Essentials.logger.logVerbose("Feeding layer "+i+"...", Config.VERBOSE);
 
             //Loops through every neuron in the layer
             for (int j = 0; j < model.layers.get(i).neurons.size(); j++) {
