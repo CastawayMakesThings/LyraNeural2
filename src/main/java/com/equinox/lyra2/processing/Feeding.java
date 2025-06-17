@@ -30,18 +30,30 @@ public class Feeding {
             //Loops through every neuron in the layer
             for (int j = 0; j < model.layers.get(i).neurons.size(); j++) {
                 double value = 0;
+                int prevLayerSize;
+                ArrayList<Double> prevLayerValues;
 
-                //Loops through every weight in the neuron
-                for (int k = 0; k < model.layers.get(i).neurons.get(j).weights.size(); k++) {
-                    //Checks if it is the first layer
-                    if(i > 0) {
-                        //If it is not the first layer, multiply the values of the previous layer by this layer's weights
-                        value += model.layers.get(i - 1).neurons.get(k).value * model.layers.get(i).neurons.get(j).weights.get(k);
-                    } else {
-                        //If it is, multiply the values of the front layer by this layer's weights'
-                        value += model.frontLayer.neurons.get(k).value * model.layers.get(i).neurons.get(j).weights.get(k);
+                // Determine the previous layer's size and values
+                if (i == 0) {
+                    prevLayerSize = model.frontLayer.neurons.size();
+                    prevLayerValues = new ArrayList<>();
+                    for (int k = 0; k < prevLayerSize; k++) {
+                        prevLayerValues.add(model.frontLayer.neurons.get(k).value);
+                    }
+                } else {
+                    prevLayerSize = model.layers.get(i-1).neurons.size();
+                    prevLayerValues = new ArrayList<>();
+                    for (int k = 0; k < prevLayerSize; k++) {
+                        prevLayerValues.add(model.layers.get(i-1).neurons.get(k).value);
                     }
                 }
+
+                //Calculate weighted sum
+                for (int k = 0; k < prevLayerSize; k++) {
+                    value += prevLayerValues.get(k) * model.layers.get(i).neurons.get(j).weights.get(k);
+                }
+
+                // Add bias and apply activation function
                 value += model.layers.get(i).neurons.get(j).bias;
                 value = ActivationMethods.activate(value, model.layers.get(i).activationFunction);
                 model.layers.get(i).neurons.get(j).value = value;
@@ -51,7 +63,7 @@ public class Feeding {
         //The raw output values
         ArrayList<Double> output = new ArrayList<>();
 
-        //Gets the output binary.
+        //Gets the output values
         for (int i = 0; i < model.layers.getLast().neurons.size(); i++) {
             output.add(model.layers.getLast().neurons.get(i).value);
         }
@@ -60,3 +72,4 @@ public class Feeding {
         return output;
     }
 }
+
