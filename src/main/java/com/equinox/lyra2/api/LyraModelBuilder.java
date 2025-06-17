@@ -1,0 +1,81 @@
+package com.equinox.lyra2.api;
+
+import com.equinox.lyra2.Enums;
+import com.equinox.lyra2.errors.InvalidModelError;
+import com.equinox.lyra2.pojo.LyraModel;
+import com.equinox.lyra2.processing.Initialization;
+
+import java.util.ArrayList;
+
+public class LyraModelBuilder {
+    private String modelID;
+    private String modelAuthor;
+    private ArrayList<Integer> layers = new ArrayList<>();
+    private ArrayList<Enums.activationFunctions> activationFunctionPerLayer = new ArrayList<>();
+    private int backLayerSize = 0;
+    private int frontLayerSize = 0;
+    private Enums.activationFunctions backLayerActivationFunction;
+    private Enums.IOType inputType;
+    private Enums.IOType outputType;
+
+    public LyraModelBuilder name(String s) {
+        modelID = s;
+         return this;
+    }
+    public LyraModelBuilder author(String s) {
+        modelAuthor = s;
+        return this;
+    }
+
+    public LyraModelBuilder outputType(Enums.IOType s) {
+        outputType = s;
+        return this;
+    }
+    public LyraModelBuilder inputType(String s) {
+        inputType = Enums.IOType.valueOf(s);
+        return this;
+    }
+    public LyraModelBuilder backLayerActivationFunction(Enums.activationFunctions s) {
+        backLayerActivationFunction = s;
+        return this;
+    }
+    public LyraModelBuilder backLayerSize(int s) {
+        if (s < 0) {throw new InvalidModelError("BACK LAYER SIZE CAN NOT EQUAL ZERO");}
+        backLayerSize = s;
+        return this;
+    }
+    public LyraModelBuilder frontLayerSize(int s) {
+        if (s < 0) {throw new InvalidModelError("FRONT LAYER SIZE CAN NOT EQUAL ZERO");}
+        return this;
+    }
+    public LyraModelBuilder addHiddenLayer(int s, Enums.activationFunctions s2) {
+        if (s < 0) {throw new InvalidModelError("HIDDEN SIZE CAN NOT EQUAL ZERO");}
+        layers.add(s);
+        activationFunctionPerLayer.add(s2);
+        return this;
+    }
+    public LyraModel build() {
+        //Checks to make sure all required fields are entered
+        if(modelID == null ||
+                modelAuthor == null ||
+                layers.isEmpty() ||
+                backLayerActivationFunction == null ||
+                activationFunctionPerLayer.isEmpty() ||
+                activationFunctionPerLayer.size() !=
+                        layers.size() ||
+                inputType == null || outputType == null) {
+            throw new InvalidModelError("ONE OR MORE FIELDS ARE MISSING FROM MODEL BUILDER!");
+        }
+        if(inputType == Enums.IOType.RAW && frontLayerSize == 0) {
+            throw new InvalidModelError("IF THE DATATYPE \"RAW\" IS SELECTED FOR THE FIRST LAYER, YOU MUST SPECIFY THE FRONT LAYER SIZE!");
+        }
+        if(outputType == Enums.IOType.RAW && backLayerSize == 0) {
+            throw new InvalidModelError("IF THE DATATYPE \"RAW\" IS SELECTED FOR THE LAST LAYER, YOU MUST SPECIFY THE LAST LAYER SIZE!");
+        }
+
+        //Actually builds the model
+        LyraModel model = new LyraModel();
+        model = Initialization.initializeModel(model, modelID, modelAuthor, inputType, outputType, layers, activationFunctionPerLayer, frontLayerSize, backLayerSize, backLayerActivationFunction);
+        return model;
+    }
+}

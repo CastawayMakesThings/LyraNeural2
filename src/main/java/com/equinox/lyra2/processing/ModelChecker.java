@@ -147,11 +147,6 @@ public class ModelChecker {
                     throw new InvalidModelError("Input must be a Character");
                 }
             }
-            case STRING -> {
-                if (!(input instanceof String)) {
-                    throw new InvalidModelError("Input must be a String");
-                }
-            }
             default -> throw new InvalidModelError("Unknown input type");
         }
     }

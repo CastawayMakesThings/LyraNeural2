@@ -2,6 +2,7 @@ package com.equinox.lyra2.processing;
 
 import com.equinox.equinox_essentials.Essentials;
 import com.equinox.lyra2.Enums;
+import com.equinox.lyra2.errors.LyraWrongDatatypeException;
 import com.equinox.lyra2.pojo.FrontLayer;
 import com.equinox.lyra2.pojo.Layer;
 import com.equinox.lyra2.pojo.LyraModel;
@@ -23,7 +24,10 @@ public class Initialization {
                                             Enums.IOType inputType,
                                             Enums.IOType outputType,
                                             ArrayList<Integer> neuronsPerLayer,
-                                            ArrayList<Enums.activationFunctions> activationFunctions) {
+                                            ArrayList<Enums.activationFunctions> activationFunctions,
+                                            int firstLayerSize,
+                                            int lastLayerSize,
+                                            Enums.activationFunctions lastLayerActivationFunction) {
 
         Essentials.logger.logString("Initializing model...");
 
@@ -47,13 +51,16 @@ public class Initialization {
             throw new IllegalArgumentException("The amount of layers inputted does not match the amount of activation functions. ("+activationFunctions.size()+" != "+(neuronsPerLayer.size() + 1)+")\n\n");
         }
 
-        //If the user for some reason sets the first layer's activation function, delete it
-        if(activationFunctions.getFirst() == null) {
-            activationFunctions.removeFirst();
-        }
-
         //Creates the first layer
-        model.frontLayer = new FrontLayer(neuronsPerLayer.getFirst(), inputType);
+        if(inputType != Enums.IOType.RAW) {
+            try {
+                model.frontLayer = new FrontLayer(DatatypeConversion.getBitCount(inputType), inputType);
+            } catch (LyraWrongDatatypeException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            model.frontLayer = new FrontLayer(firstLayerSize, inputType);
+        }
 
         //Deletes the first layer's neuron count
         neuronsPerLayer.removeFirst();
@@ -63,6 +70,17 @@ public class Initialization {
         for (int i = 0; i < neuronsPerLayer.size(); i++) {
             Layer layer = new Layer(neuronsPerLayer.get(i), activationFunctions.get(i));
             model.layers.add(layer);
+        }
+
+        //Creates the last layer
+        if(outputType != Enums.IOType.RAW) {
+            try {
+                model.layers.add(new Layer(DatatypeConversion.getBitCount(outputType), lastLayerActivationFunction));
+            } catch (LyraWrongDatatypeException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            model.layers.add(new Layer(lastLayerSize, lastLayerActivationFunction));
         }
 
         // Adds the layer's neuron's weights and biases

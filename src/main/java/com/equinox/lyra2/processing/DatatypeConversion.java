@@ -39,16 +39,15 @@ public class DatatypeConversion {
                 } catch (Exception e) {
                     throw new LyraWrongDatatypeException();
                 }
-            case STRING:
+            case FLOAT:
                 try {
-                    String str = (String) input;
-                    ArrayList<Double> stringResult = new ArrayList<>();
-                    for (char c : str.toCharArray()) {
-                        for (int i = 15; i >= 0; i--) {
-                            stringResult.add((double) ((c >>> i) & 1));
-                        }
+                    float value = (Float) input;
+                    ArrayList<Double> floatResult = new ArrayList<>();
+                    int bits32 = Float.floatToIntBits(value);
+                    for (int i = 31; i >= 0; i--) {
+                        floatResult.add((double) ((bits32 >>> i) & 1));
                     }
-                    return stringResult;
+                    return floatResult;
                 } catch (Exception e) {
                     throw new LyraWrongDatatypeException();
                 }
@@ -60,6 +59,17 @@ public class DatatypeConversion {
                         longResult.add((double) ((value >>> i) & 1));
                     }
                     return longResult;
+                } catch (Exception e) {
+                    throw new LyraWrongDatatypeException();
+                }
+            case CHAR:
+                try {
+                    char value = (Character) input;
+                    ArrayList<Double> charResult = new ArrayList<>();
+                    for (int i = 7; i >= 0; i--) {
+                        charResult.add((double) ((value >>> i) & 1));
+                    }
+                    return charResult;
                 } catch (Exception e) {
                     throw new LyraWrongDatatypeException();
                 }
@@ -113,19 +123,15 @@ public class DatatypeConversion {
                     doubleBits = (doubleBits << 1) | binaryArray.get(i).intValue();
                 }
                 return Double.longBitsToDouble(doubleBits);
-            case STRING:
-                if (binaryArray.size() % 16 != 0) {
+            case FLOAT:
+                if (binaryArray.size() != 32) {
                     throw new LyraWrongDatatypeException();
                 }
-                StringBuilder str = new StringBuilder();
-                for (int i = 0; i < binaryArray.size(); i += 16) {
-                    char c = 0;
-                    for (int j = 0; j < 16; j++) {
-                        c = (char) ((c << 1) | binaryArray.get(i + j).intValue());
-                    }
-                    str.append(c);
+                int floatBits = 0;
+                for (int i = 0; i < 32; i++) {
+                    floatBits = (floatBits << 1) | binaryArray.get(i).intValue();
                 }
-                return str.toString();
+                return Float.intBitsToFloat(floatBits);
             case LONG:
                 if (binaryArray.size() != 64) {
                     throw new LyraWrongDatatypeException();
@@ -135,8 +141,41 @@ public class DatatypeConversion {
                     value = (value << 1) | binaryArray.get(i).intValue();
                 }
                 return value;
+            case CHAR:
+                if (binaryArray.size() != 16) {
+                    throw new LyraWrongDatatypeException();
+                }
+                char charValue = 0;
+                for (int i = 0; i < 8; i++) {
+                    charValue = (char) ((charValue << 1) | binaryArray.get(i).intValue());
+                }
+                return charValue;
             default:
                 throw new LyraWrongDatatypeException();
         }
     }
+
+    public static int getBitCount(Enums.IOType type) throws LyraWrongDatatypeException {
+        return switch (type) {
+            case RAW -> -1;
+            case INTEGER, FLOAT -> 32;
+            case DOUBLE, LONG -> 64;
+            case CHAR -> 8;
+            default -> throw new LyraWrongDatatypeException();
+        };
+    }
+
+    public static boolean isValidDataType(Enums.IOType type, Object input) {
+        if (input == null) return false;
+        return switch (type) {
+            case RAW -> input instanceof ArrayList<?>;
+            case INTEGER -> input instanceof Integer;
+            case DOUBLE -> input instanceof Double;
+            case FLOAT -> input instanceof Float;
+            case LONG -> input instanceof Long;
+            case CHAR -> input instanceof Character;
+        };
+    }
+
+
 }
