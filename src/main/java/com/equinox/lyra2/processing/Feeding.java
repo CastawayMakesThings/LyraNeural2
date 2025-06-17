@@ -1,13 +1,9 @@
 package com.equinox.lyra2.processing;
 
-import com.equinox.equinox_essentials.Essentials;
-import com.equinox.lyra2.Config;
 import com.equinox.lyra2.errors.LyraWrongDatatypeException;
-import com.equinox.lyra2.pojo.LyraModel;
+import com.equinox.lyra2.objects.LyraModel;
 
 import java.util.ArrayList;
-
-import static com.equinox.lyra2.Config.VERBOSE;
 
 public class Feeding {
 

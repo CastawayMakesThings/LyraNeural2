@@ -1,10 +1,9 @@
 package com.equinox.lyra2.processing;
 
 import com.equinox.equinox_essentials.Essentials;
-import com.equinox.equinox_essentials.source.Logging;
 import com.equinox.lyra2.errors.InvalidModelError;
-import com.equinox.lyra2.pojo.LyraModel;
-import com.equinox.lyra2.pojo.Neuron;
+import com.equinox.lyra2.objects.LyraModel;
+import com.equinox.lyra2.objects.Neuron;
 
 import static com.equinox.lyra2.Config.VERBOSE;
 

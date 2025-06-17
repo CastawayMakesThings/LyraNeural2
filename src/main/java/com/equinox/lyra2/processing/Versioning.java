@@ -1,7 +1,7 @@
 package com.equinox.lyra2.processing;
 
 import com.equinox.lyra2.errors.LyraModelLoadingError;
-import com.equinox.lyra2.pojo.LyraModel;
+import com.equinox.lyra2.objects.LyraModel;
 
 public class Versioning {
     public static LyraModel updateModel(LyraModel model) {

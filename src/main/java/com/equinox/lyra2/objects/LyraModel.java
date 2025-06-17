@@ -1,11 +1,9 @@
-package com.equinox.lyra2.pojo;
+package com.equinox.lyra2.objects;
 
 import com.equinox.lyra2.Enums;
 import com.equinox.lyra2.api.LyraModelBuilder;
-import com.equinox.lyra2.processing.Initialization;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class LyraModel {
     public String modelID;

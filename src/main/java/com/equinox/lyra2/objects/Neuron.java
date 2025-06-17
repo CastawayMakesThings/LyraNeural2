@@ -1,8 +1,6 @@
-package com.equinox.lyra2.pojo;
+package com.equinox.lyra2.objects;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 
 public class Neuron {
     public double value;

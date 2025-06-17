@@ -1,7 +1,7 @@
 package com.equinox.lyra2.processing;
 
 import com.equinox.lyra2.Config;
-import com.equinox.lyra2.pojo.LyraModel;
+import com.equinox.lyra2.objects.LyraModel;
 import com.google.gson.Gson;
 
 import java.io.FileReader;
