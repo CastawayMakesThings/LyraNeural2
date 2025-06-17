@@ -11,4 +11,6 @@ public class LyraModel {
     public ArrayList<Layer> layers;
     public String modelAuthor;
     public Enums.IOType outputType;
+    public String lyraVersion;
+    public String metadata;
 }

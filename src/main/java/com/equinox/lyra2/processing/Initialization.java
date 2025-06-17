@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import static com.equinox.lyra2.Config.VERBOSE;
+import static com.equinox.lyra2.Config.version;
 
 public class Initialization {
 
@@ -31,6 +32,12 @@ public class Initialization {
 
         //Sets model author
         model.modelAuthor = modelAuthor;
+
+        //Sets model version
+        model.lyraVersion = version;
+
+        //Sets model metadata to empty
+        model.metadata = "";
 
         //Sets output type
         model.outputType = outputType;
