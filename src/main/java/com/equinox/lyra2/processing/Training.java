@@ -90,6 +90,8 @@ public class Training {
                             derivative = activation > 0 ? 1.0 : 0.01;
                         } else if (currentLayer.activationFunction == Enums.activationFunctions.TANH) {
                             derivative = 1 - (activation * activation) + 1e-7;
+                        } else if (currentLayer.activationFunction == Enums.activationFunctions.RELU) {
+                            derivative = activation > 0 ? 1.0 : 0.0;  // ReLU derivative
                         } else {
                             throw new RuntimeException("Unsupported activation function");
                         }

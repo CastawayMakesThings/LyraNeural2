@@ -11,7 +11,6 @@ public class ModelChecker {
     //------Checks to make sure model is valid------
     public static void checkModel(LyraModel model) {
 
-        Essentials.logger.logString("Checking model...");
         Essentials.logger.logVerbose("Checking entire model...", VERBOSE);
 
         //Assures model exists
@@ -99,7 +98,6 @@ public class ModelChecker {
 
         }
 
-        Essentials.logger.logString("Model is valid!");
         Essentials.logger.logVerbose("Model has passed all checks!", VERBOSE);
 
     }

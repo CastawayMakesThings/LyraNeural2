@@ -31,8 +31,8 @@ public class LyraModelBuilder {
         outputType = s;
         return this;
     }
-    public LyraModelBuilder inputType(String s) {
-        inputType = Enums.IOType.valueOf(s);
+    public LyraModelBuilder inputType(Enums.IOType s) {
+        inputType = s;
         return this;
     }
     public LyraModelBuilder backLayerActivationFunction(Enums.activationFunctions s) {
