@@ -48,6 +48,19 @@ public class LyraModelBuilder {
         if (s < 0) {throw new InvalidModelError("FRONT LAYER SIZE CAN NOT EQUAL ZERO");}
         return this;
     }
+    public LyraModelBuilder setModelArchitecture(ArrayList<Integer> architecture) {
+        layers = architecture;
+        return this;
+    }
+
+    public LyraModelBuilder setModelArchitecture(int[] architecture) {
+        layers = new ArrayList<>();
+        for (int size : architecture) {
+            layers.add(size);
+        }
+        return this;
+    }
+
     public LyraModelBuilder addHiddenLayer(int s, Enums.activationFunctions s2) {
         if (s < 0) {throw new InvalidModelError("HIDDEN SIZE CAN NOT EQUAL ZERO");}
         layers.add(s);

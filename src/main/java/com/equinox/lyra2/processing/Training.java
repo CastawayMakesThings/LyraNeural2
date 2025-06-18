@@ -13,13 +13,21 @@ public class Training {
     public static LyraModel trainModel(LyraModel model,
                                        ArrayList<ArrayList<Double>> inputDataSet,
                                        ArrayList<ArrayList<Double>> wantedOutputDataSet,
-                                       int epochs,
-                                       double learningRate) {
+                                       long epochs,
+                                       boolean shouldLimitEpochs,
+                                       boolean shouldLimitTime,
+                                       long timeLimit,
+                                       int statusPrintInterval,
+                                       double learningRate,
+                                       double errorThreshold) {
 
         Essentials.logger.logString("Starting model training...");
         ModelChecker.checkModel(model);
+        int epoch = 0;
+        int goodScoreStreak = 0;
+        long startTimeInSeconds = System.currentTimeMillis() / 1000;
 
-        for (int epoch = 0; epoch < epochs; epoch++) {
+        while (true) {
             double totalError = 0;
 
             // Iterate through each training example
@@ -118,11 +126,26 @@ public class Training {
                 }
             }
 
-            // Print progress every 1000 epochs
-            if (epoch % 1000 == 0) {
-                double avgError = totalError / (inputDataSet.size() * model.layers.getLast().neurons.size());
-                Essentials.logger.logString(String.format("Epoch %d, Average Error: %.6f", epoch, avgError));
+            // Print progress at the interval
+            if(statusPrintInterval != 0) {
+                if (epoch % statusPrintInterval == 0) {
+                    double avgError = totalError / (inputDataSet.size() * model.layers.getLast().neurons.size());
+                    Essentials.logger.logString(String.format("Epoch: %d, Time (in seconds): %d, Average Error: %.6f", epoch, (System.currentTimeMillis() / 1000) - startTimeInSeconds, avgError));
+                }
             }
+            if(totalError < errorThreshold) {
+                goodScoreStreak++;
+            }
+            if(goodScoreStreak >= 5) {
+                break;
+            }
+            if(epoch >= epochs && shouldLimitEpochs) {
+                break;
+            }
+            if(shouldLimitTime && (System.currentTimeMillis() / 1000) - startTimeInSeconds >= timeLimit) {
+                break;
+            }
+            epoch++;
         }
 
         return model;
@@ -130,6 +153,5 @@ public class Training {
     private static double clipGradient(double value, double threshold) {
         return Math.max(Math.min(value, threshold), -threshold);
     }
-
 }
 
