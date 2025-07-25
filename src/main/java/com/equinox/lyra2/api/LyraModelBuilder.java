@@ -17,6 +17,7 @@ public class LyraModelBuilder {
     private Enums.activationFunctions backLayerActivationFunction;
     private Enums.IOType inputType;
     private Enums.IOType outputType;
+    private Enums.activationFunctions activationFunction;
 
     public LyraModelBuilder name(String s) {
         modelID = s;
@@ -35,8 +36,13 @@ public class LyraModelBuilder {
         inputType = s;
         return this;
     }
-    public LyraModelBuilder backLayerActivationFunction(Enums.activationFunctions s) {
-        backLayerActivationFunction = s;
+    public LyraModelBuilder setActivationFunction(Enums.activationFunctions s) {
+        activationFunction = s;
+
+        //Sets all previous layers to new activation function.
+        for (int i = 0; i < layers.size(); i++) {
+            activationFunctionPerLayer.set(i, activationFunction);
+        }
         return this;
     }
     public LyraModelBuilder backLayerSize(int s) {
@@ -61,13 +67,14 @@ public class LyraModelBuilder {
         return this;
     }
 
-    public LyraModelBuilder addHiddenLayer(int s, Enums.activationFunctions s2) {
+    public LyraModelBuilder addHiddenLayer(int s) {
         if (s < 0) {throw new InvalidModelError("HIDDEN SIZE CAN NOT EQUAL ZERO");}
         layers.add(s);
-        activationFunctionPerLayer.add(s2);
+        activationFunctionPerLayer.add(activationFunction);
         return this;
     }
     public LyraModel build() {
+        backLayerActivationFunction = activationFunction;
         //Checks to make sure all required fields are entered
         if(modelID == null ||
                 modelAuthor == null ||
@@ -77,7 +84,7 @@ public class LyraModelBuilder {
                 activationFunctionPerLayer.size() !=
                         layers.size() ||
                 inputType == null || outputType == null) {
-            throw new InvalidModelError("ONE OR MORE FIELDS ARE MISSING FROM MODEL BUILDER!");
+            throw new InvalidModelError("ONE OR MORE FIELDS ARE MISSING FROM MODEL BUILDER! functionperlayer: "+activationFunctionPerLayer.size()+" layers: "+layers.size());
         }
         if(inputType == Enums.IOType.RAW && frontLayerSize == 0) {
             throw new InvalidModelError("IF THE DATATYPE \"RAW\" IS SELECTED FOR THE FIRST LAYER, YOU MUST SPECIFY THE FRONT LAYER SIZE!");

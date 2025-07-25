@@ -17,10 +17,10 @@ public class Test {
                 .author("EquinoxElectronic")
                 .inputType(Enums.IOType.INTEGER)
                 .outputType(Enums.IOType.INTEGER)
-                .backLayerActivationFunction(Enums.activationFunctions.TANH)
-                .addHiddenLayer(10, Enums.activationFunctions.TANH)
-                .addHiddenLayer(10, Enums.activationFunctions.TANH)
-                .addHiddenLayer(10, Enums.activationFunctions.TANH)
+                .setActivationFunction(Enums.activationFunctions.TANH)
+                .addHiddenLayer(10)
+                .addHiddenLayer(10)
+                .addHiddenLayer(10)
                 .build();
 
         ArrayList<Object> idata = new ArrayList<>();

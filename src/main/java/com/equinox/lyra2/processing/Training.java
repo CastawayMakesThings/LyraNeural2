@@ -26,6 +26,7 @@ public class Training {
         int epoch = 0;
         int goodScoreStreak = 0;
         long startTimeInSeconds = System.currentTimeMillis() / 1000;
+        double avgError;
 
         while (true) {
             double totalError = 0;
@@ -128,10 +129,11 @@ public class Training {
                 }
             }
 
+            avgError = totalError / (inputDataSet.size() * model.layers.getLast().neurons.size());
+
             // Print progress at the interval
             if(statusPrintInterval != 0) {
                 if (epoch % statusPrintInterval == 0) {
-                    double avgError = totalError / (inputDataSet.size() * model.layers.getLast().neurons.size());
                     Essentials.logger.logString(String.format("Epoch: %d, Time (in seconds): %d, Average Error: %.6f", epoch, (System.currentTimeMillis() / 1000) - startTimeInSeconds, avgError));
                 }
             }
@@ -149,6 +151,8 @@ public class Training {
             }
             epoch++;
         }
+
+        Essentials.logger.logString("Training Completed! Average Error: " + avgError);
 
         return model;
     }
