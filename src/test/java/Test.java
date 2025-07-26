@@ -8,8 +8,6 @@ import java.util.ArrayList;
 public class Test {
     public static void main(String[] args) {
 
-//TODO |        Found the issue! It has to do with datatype conversion. There seems to be no issue with the training.
-
         LyraModel model = new LyraModel();
         model = model.builder().name("testModel")
                 .author("EquinoxElectronic")
