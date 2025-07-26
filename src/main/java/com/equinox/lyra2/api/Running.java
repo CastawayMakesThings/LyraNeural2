@@ -27,22 +27,12 @@ public class Running {
             throw new LyraError("COULD NOT CONVERT DATATYPE FOR FEEDING!" + e.getMessage());
         }
 
-        System.out.println("Binary data input: ");
-        for(int i = 0; i < binaryData.size(); i++) {
-            System.out.println(binaryData.get(i)+"/");
-        }
-
         //Feeds the model
         ArrayList<Double> resultBinaryData;
         try {
             resultBinaryData = Feeding.feedForward(model, binaryData);
         } catch (LyraWrongDatatypeException e) {
             throw new LyraError("COULD NOT FEED THE MODEL!" + e.getMessage() );
-        }
-
-        System.out.println("~");
-        for (int i = 0; i < resultBinaryData.size(); i++) {
-            System.out.println(resultBinaryData.get(i)+"/");
         }
 
         //Converts the binary output to the desired output.
