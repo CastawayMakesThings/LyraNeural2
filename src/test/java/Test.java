@@ -8,9 +8,7 @@ import java.util.ArrayList;
 public class Test {
     public static void main(String[] args) {
 
-//TODO |        FIX THE TRAINING, SOMETHING IS WRONG WITH IT. MOST LIKELY CAUSE IS IN DATATYPE CONVERSION,
-//TODO |        THERE IS SOME BIG ISSUE WITH THE FACT THAT DIFFERENT ACTIVATION FUNCTIONS HAVE DIFFERENT
-//TODO |        SIZE RANGES!
+//TODO |        Found the issue! It has to do with datatype conversion. There seems to be no issue with the training.
 
         LyraModel model = new LyraModel();
         model = model.builder().name("testModel")

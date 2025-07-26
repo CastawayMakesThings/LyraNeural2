@@ -1,5 +1,6 @@
 package com.equinox.lyra2.api;
 
+import com.equinox.equinox_essentials.Essentials;
 import com.equinox.lyra2.Enums;
 import com.equinox.lyra2.errors.InvalidModelError;
 import com.equinox.lyra2.objects.LyraModel;
@@ -96,6 +97,7 @@ public class LyraModelBuilder {
         //Actually builds the model
         LyraModel model = new LyraModel();
         model = Initialization.initializeModel(model, modelID, modelAuthor, inputType, outputType, layers, activationFunctionPerLayer, frontLayerSize, backLayerSize, backLayerActivationFunction);
+        Essentials.logger.logString("Model built!");
         return model;
     }
 }
