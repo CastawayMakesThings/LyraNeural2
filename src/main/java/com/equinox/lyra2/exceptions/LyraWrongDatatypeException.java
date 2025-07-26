@@ -1,4 +1,4 @@
-package com.equinox.lyra2.errors;
+package com.equinox.lyra2.exceptions;
 
 public class LyraWrongDatatypeException extends Exception {
 
@@ -10,3 +10,7 @@ public class LyraWrongDatatypeException extends Exception {
         super(message);
     }
 }
+
+//This is for when there is a mismatch for datatypes.
+
+//Equinox Electronic

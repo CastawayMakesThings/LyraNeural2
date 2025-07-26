@@ -2,7 +2,7 @@ package com.equinox.lyra2.processing;
 
 import com.equinox.equinox_essentials.Essentials;
 import com.equinox.lyra2.Enums;
-import com.equinox.lyra2.errors.LyraWrongDatatypeException;
+import com.equinox.lyra2.exceptions.LyraWrongDatatypeException;
 import com.equinox.lyra2.objects.Layer;
 import com.equinox.lyra2.objects.LyraModel;
 import com.equinox.lyra2.objects.Neuron;

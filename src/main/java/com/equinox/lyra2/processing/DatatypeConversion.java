@@ -1,7 +1,7 @@
 package com.equinox.lyra2.processing;
 
 import com.equinox.lyra2.Enums;
-import com.equinox.lyra2.errors.LyraWrongDatatypeException;
+import com.equinox.lyra2.exceptions.LyraWrongDatatypeException;
 
 import java.util.ArrayList;
 

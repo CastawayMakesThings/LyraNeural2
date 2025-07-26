@@ -1,7 +1,7 @@
 package com.equinox.lyra2.processing;
 
 import com.equinox.equinox_essentials.Essentials;
-import com.equinox.lyra2.errors.InvalidModelError;
+import com.equinox.lyra2.exceptions.InvalidModelError;
 import com.equinox.lyra2.objects.LyraModel;
 import com.equinox.lyra2.objects.Neuron;
 

@@ -1,7 +1,7 @@
 package com.equinox.lyra2.api;
 
-import com.equinox.lyra2.errors.LyraError;
-import com.equinox.lyra2.errors.LyraWrongDatatypeException;
+import com.equinox.lyra2.exceptions.LyraError;
+import com.equinox.lyra2.exceptions.LyraWrongDatatypeException;
 import com.equinox.lyra2.objects.LyraModel;
 import com.equinox.lyra2.processing.DatatypeConversion;
 import com.equinox.lyra2.processing.Feeding;
