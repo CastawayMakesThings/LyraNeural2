@@ -18,8 +18,7 @@ public class ModelVisualizer {
         for (int i = 0; i < model.layers.size(); i++) {
             Layer layer = model.layers.get(i);
             summary.append("Layer ").append(i + 1).append(": ")
-                    .append(layer.neurons.size()).append(" neurons, ")
-                    .append("Activation: ").append(layer.activationFunction)
+                    .append(layer.neurons.size()).append(" neurons")
                     .append("\n");
         }
 

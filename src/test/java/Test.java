@@ -1,6 +1,7 @@
 import com.equinox.lyra2.Enums;
 import com.equinox.lyra2.api.Running;
 import com.equinox.lyra2.api.Trainer;
+import com.equinox.lyra2.api.utility.ModelVisualizer;
 import com.equinox.lyra2.objects.LyraModel;
 
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class Test {
                 .setTimeLimit(60);
 
         model = trainer.train();
+        System.out.println(ModelVisualizer.getModelSummary(model));
 
         System.out.println(Running.feed(model, 3));
     }
