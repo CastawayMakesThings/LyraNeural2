@@ -2,6 +2,7 @@ package com.equinox.lyra2.api;
 
 import com.equinox.lyra2.exceptions.LyraError;
 import com.equinox.lyra2.exceptions.LyraWrongDatatypeException;
+import com.equinox.lyra2.objects.DataSet;
 import com.equinox.lyra2.objects.LyraModel;
 import com.equinox.lyra2.processing.DatatypeConversion;
 import com.equinox.lyra2.processing.Feeding;
@@ -67,6 +68,32 @@ public class Trainer {
             }
         }
         this.outputData = binaryObjects;
+        return this;
+    }
+
+    //This is like setInputData and setOutputData, but takes in a DataSet
+    public Trainer setTrainingData(DataSet ds) {
+        ArrayList<ArrayList<Double>> binaryObjects = new ArrayList<>();
+        //Converts the object into binary
+        for (Object o : ds.inputs) {
+            try {
+                binaryObjects.add(DatatypeConversion.convertToBinaryArray(model.frontLayer.inputType, o));
+            } catch (LyraWrongDatatypeException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        this.inputData = binaryObjects;
+
+        for (Object o : ds.outputs) {
+            try {
+                binaryObjects.add(DatatypeConversion.convertToBinaryArray(model.frontLayer.inputType, o));
+            } catch (LyraWrongDatatypeException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        this.outputData = binaryObjects;
+
         return this;
     }
 

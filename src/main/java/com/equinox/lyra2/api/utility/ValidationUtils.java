@@ -5,22 +5,27 @@ import java.util.ArrayList;
 public class ValidationUtils {
     public static void validateInputs(ArrayList<ArrayList<Double>> inputs,
                                       ArrayList<ArrayList<Double>> outputs) {
+        // Check if either input or output is null
         if (inputs == null || outputs == null) {
             throw new IllegalArgumentException("Input and output data cannot be null");
         }
 
+        // Verify that input and output datasets have same number of samples
         if (inputs.size() != outputs.size()) {
             throw new IllegalArgumentException(
                     "Input and output datasets must have the same number of samples");
         }
 
+        // Check if datasets are empty
         if (inputs.isEmpty() || outputs.isEmpty()) {
             throw new IllegalArgumentException("Input and output datasets cannot be empty");
         }
 
+        // Get dimensions of first input and output samples
         int inputSize = inputs.get(0).size();
         int outputSize = outputs.get(0).size();
 
+        // Verify all input samples have same dimension
         for (ArrayList<Double> input : inputs) {
             if (input.size() != inputSize) {
                 throw new IllegalArgumentException(
@@ -28,6 +33,7 @@ public class ValidationUtils {
             }
         }
 
+        // Verify all output samples have same dimension
         for (ArrayList<Double> output : outputs) {
             if (output.size() != outputSize) {
                 throw new IllegalArgumentException(
@@ -37,3 +43,6 @@ public class ValidationUtils {
     }
 }
 
+//A simple validation class. It validates data to make sure it is valid.
+
+//Equinox Electronic

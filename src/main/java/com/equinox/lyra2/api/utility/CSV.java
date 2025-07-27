@@ -1,20 +1,13 @@
 package com.equinox.lyra2.api.utility;
 
+import com.equinox.lyra2.objects.DataSet;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class CSV {
-    public static class DataSet {
-        public ArrayList<ArrayList<Double>> inputs;
-        public ArrayList<ArrayList<Double>> outputs;
-
-        public DataSet(ArrayList<ArrayList<Double>> inputs, ArrayList<ArrayList<Double>> outputs) {
-            this.inputs = inputs;
-            this.outputs = outputs;
-        }
-    }
 
     public static DataSet readTrainingData(String filepath, String delimiter) {
         ArrayList<ArrayList<Double>> inputs = new ArrayList<>();
@@ -79,3 +72,6 @@ public class CSV {
     }
 }
 
+//This is a simple class that converts serialized CSV data into a DataSet that the model can read.
+
+//Equinox Electronic

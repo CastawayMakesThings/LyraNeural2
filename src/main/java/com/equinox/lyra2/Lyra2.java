@@ -31,5 +31,8 @@ public class Lyra2 {
         Essentials.logger.logWarning("NO README YET!");
         //TODO Add commentation to the new utility classes
     }
-
 }
+
+//=================================
+//== The central class of Lyra2. ==
+//=================================
