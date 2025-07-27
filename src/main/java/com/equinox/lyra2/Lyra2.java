@@ -32,7 +32,4 @@ public class Lyra2 {
         //TODO finish the readme and add it to this.
     }
 
-    public static void main(String[] args) {
-        printCredits();
-    }
 }
