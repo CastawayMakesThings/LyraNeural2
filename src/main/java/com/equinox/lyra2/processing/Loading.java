@@ -31,3 +31,9 @@ public class Loading {
         return model;
     }
 }
+
+//This is a very basic class that loads up a saved model file. As you can see,
+//it uses JSON. This is definetly suboptimal for larger models, so I intend to write
+//my parser.
+
+//Equinox Electronic

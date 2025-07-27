@@ -11,3 +11,6 @@ public class Versioning {
         throw new LyraModelLoadingError("UNKNOWN VERSION");
     }
 }
+
+//This class will manage updating models from an older version of Lyra2. Right now it is empty,
+//since there have not been any updates.

@@ -6,7 +6,7 @@ import static com.equinox.lyra2.Enums.activationFunctions.SIGMOID;
 
 public class ActivationMethods {
 
-
+    //This method returns the value of the inputted function applied to x;
     public static double activate(double x, Enums.activationFunctions function) {
         return switch (function) {
             case SIGMOID -> 1.0 / (1.0 + Math.exp(-x));
@@ -16,6 +16,7 @@ public class ActivationMethods {
         };
     }
 
+    //This is the same as the last method, but finds the derivative.
     public static double derivative(double x, Enums.activationFunctions function) {
         return switch (function) {
             case SIGMOID -> {
@@ -28,3 +29,10 @@ public class ActivationMethods {
         };
     }
 }
+
+//This class is a very simple utility class that makes it a little easier to work with activation functions.
+//As you can see, there are only 4 different activation functions, so I am considering using lambdas to let
+//the user write their own activation function, but that probably wont be added until later updates.
+
+
+//Equinox Electronic

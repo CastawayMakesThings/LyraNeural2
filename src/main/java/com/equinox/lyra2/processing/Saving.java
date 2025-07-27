@@ -33,3 +33,10 @@ public class Saving {
         }
     }
 }
+
+
+//A very simple class that saves a model into a JSON file. As mentioned in the comments
+//for Loading.java, this is less than ideal for large models, so I do intend to write my
+//own serializer to save models.
+
+//Equinox Electronic

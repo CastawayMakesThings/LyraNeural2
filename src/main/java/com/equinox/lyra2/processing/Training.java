@@ -137,6 +137,8 @@ public class Training {
                     Essentials.logger.logString(String.format("Epoch: %d, Time (in seconds): %d, Average Error: %.6f", epoch, (System.currentTimeMillis() / 1000) - startTimeInSeconds, avgError));
                 }
             }
+
+            //Checks to see if training should stop
             if(totalError < errorThreshold) {
                 goodScoreStreak++;
             }
@@ -161,3 +163,14 @@ public class Training {
     }
 }
 
+
+//=================================================================================
+//== This is probably to most complicated class in this entire API. This is the  ==
+//== class responsible for the training of the model. It uses pretty conventional==
+//== methods for training (except for the fact that this uses ArrayLists of      ==
+//== ArrayLists, rather than matrices.). I do intend to use an ExecutorService   ==
+//== speed up the training, and I also hope to let users implement their own loss==
+//== calculation function.                                                       ==
+//=================================================================================
+
+//Equinox Electronic

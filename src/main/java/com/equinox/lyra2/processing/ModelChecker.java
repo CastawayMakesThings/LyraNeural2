@@ -103,6 +103,8 @@ public class ModelChecker {
     }
 
     //Checks to make sure the input macthes the model's input type
+    //NOTE: This can eventually be improved and shortened using the
+    //isValidDatatype method in DataypeConversion
     public static void checkInputType (LyraModel model, Object input) {
         Essentials.logger.logVerbose("Checking input...", VERBOSE);
         if (model == null) {
@@ -148,3 +150,9 @@ public class ModelChecker {
         }
     }
 }
+
+//This is a relatively simple model checker. It just checks to make sure all the
+//required values of a model exist, and that there are no obvious issues in the
+//data.
+
+//Equinox Electronic

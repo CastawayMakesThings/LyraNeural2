@@ -141,3 +141,9 @@ public class Initialization {
         return model;
     }
 }
+
+
+//This is what sets the initial values for a model. Depending on the activation function,
+//it will use He or Xavier initialization, with a Gaussian applied.
+
+//Equinox Electronic

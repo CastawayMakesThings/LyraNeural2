@@ -67,3 +67,10 @@ public class Feeding {
     }
 }
 
+//This is a very simple feedforward. It loops through the layers, then loops through each
+//neuron in the layer, then loops through the weights. I could have used matrix math,
+//but for some reason I didn't. Maybe Lyra3 will have it. But for now, I will stick to
+//plain old arithmetic.
+
+//Equinox Electronic
+

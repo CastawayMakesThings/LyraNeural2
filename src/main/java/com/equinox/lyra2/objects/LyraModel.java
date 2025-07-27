@@ -47,4 +47,7 @@ public class LyraModel {
 }
 
 
-//This class is the model class. //TODO Finish this class's documentation
+//This class is the model class. All models are an instance of this class. Note that metadata, modelID, and modelAuthor
+//don't have any effect on the actual model, and are all really just metadata.
+
+//Equinox Electronic
