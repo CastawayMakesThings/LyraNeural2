@@ -29,7 +29,7 @@ public class Lyra2 {
     //This method will return the README so that people don't have to go online to get it
     public static void getREADME (String filepath) {
         Essentials.logger.logWarning("NO README YET!");
-        //TODO finish the readme and add it to this.
+        //TODO Add commentation to the new utility classes
     }
 
 }
