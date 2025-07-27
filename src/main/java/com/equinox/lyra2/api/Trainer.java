@@ -1,5 +1,6 @@
 package com.equinox.lyra2.api;
 
+import com.equinox.lyra2.Enums;
 import com.equinox.lyra2.exceptions.LyraError;
 import com.equinox.lyra2.exceptions.LyraWrongDatatypeException;
 import com.equinox.lyra2.objects.DataSet;
@@ -20,6 +21,8 @@ public class Trainer {
     private double learningRate;
     private int statusPrintInterval;
     private double threshold = 0;
+    private Enums.trainingStoppers primaryStopper;
+    private boolean shouldUseProgressBar = false;
 
     //The Epoch limit for training
     public Trainer setEpochLimit(long limit) {
@@ -39,6 +42,33 @@ public class Trainer {
     public Trainer setModel(LyraModel model) {
         this.model = model;
         return this;
+    }
+
+    //Sets the primary method for stopping
+    public Trainer setPrimaryTrainingStopper(Enums.trainingStoppers stopper) {
+        this.primaryStopper = stopper;
+        return this;
+    }
+
+    //Sets status printing method
+    public Trainer setStatusPrintingMethod(String statusPrintingMethod) {
+        statusPrintingMethod = statusPrintingMethod.toLowerCase();
+        switch (statusPrintingMethod) {
+            case "progressBar":
+                shouldUseProgressBar = true;
+                return this;
+            case "intervals":
+                shouldUseProgressBar = false;
+                return this;
+            case "terminal":
+                shouldUseProgressBar = false;
+                return this;
+            case "bar":
+                shouldUseProgressBar = true;
+                return this;
+            default:
+                throw new LyraError("Invalid status printing method!\n Use \"bar\" or \"intervals\".");
+        }
     }
 
     //Sets the input data set
@@ -146,13 +176,13 @@ public class Trainer {
             //Actual training
             LyraModel trainedModel;
             trainedModel = Training.trainModel(model, inputData, outputData, epochsLimit,
-                    limitEpochs, limitTime, timeLimit, statusPrintInterval, learningRate, threshold);
+                    limitEpochs, limitTime, timeLimit, statusPrintInterval, learningRate,
+                    threshold, shouldUseProgressBar, primaryStopper);
             return trainedModel;
         } finally {
             // Ensure executors are shut down
             Training.endExecutor();
             Feeding.endExecutor();
-
         }
     }
 

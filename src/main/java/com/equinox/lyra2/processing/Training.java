@@ -2,6 +2,7 @@ package com.equinox.lyra2.processing;
 
 import com.equinox.equinox_essentials.Essentials;
 import com.equinox.lyra2.Enums;
+import com.equinox.lyra2.exceptions.LyraError;
 import com.equinox.lyra2.exceptions.LyraWrongDatatypeException;
 import com.equinox.lyra2.objects.Layer;
 import com.equinox.lyra2.objects.LyraModel;
@@ -46,7 +47,9 @@ public class Training {
                                        long timeLimit,
                                        int statusPrintInterval,
                                        double learningRate,
-                                       double errorThreshold) {
+                                       double errorThreshold,
+                                       boolean progressBar,
+                                       Enums.trainingStoppers primaryStopper) {
 
         Essentials.logger.logString("Starting model training...");
         ModelChecker.checkModel(model);
@@ -54,6 +57,25 @@ public class Training {
         int goodScoreStreak = 0;
         long startTimeInSeconds = System.currentTimeMillis() / 1000;
         double avgError;
+
+        //Starts a progress bar
+        if(progressBar) {
+            switch (primaryStopper) {
+                case EPOCH:
+                    if(epochs <= 0) {throw new LyraError("Epoch count must be greater than 0");}
+                    Essentials.logger.createProgressBar("Training", (int) epochs);
+                    break;
+                case TIME:
+                    System.out.println(timeLimit);
+                    if(timeLimit < 1) {throw new LyraError("Time limit must be larger than 0");}
+                    Essentials.logger.createProgressBar("Training", (int) (timeLimit));
+                    break;
+                case ERROR:
+                    if(errorThreshold <= 0) {throw new LyraError("Error threshold must be greater than 0");}
+                    Essentials.logger.createProgressBar("Training", (int) (errorThreshold * 1000));
+                    break;
+            }
+        }
 
         while (true) {
             double totalError = 0;
@@ -161,10 +183,27 @@ public class Training {
             avgError = totalError / (inputDataSet.size() * model.layers.getLast().neurons.size());
 
             // Print progress at the interval
-            if(statusPrintInterval != 0) {
+            if(statusPrintInterval != 0 && !progressBar) {
                 if (epoch % statusPrintInterval == 0) {
                     Essentials.logger.logString(String.format("Epoch: %d, Time (in seconds): %d, Average Error: %.6f", 
                         epoch, (System.currentTimeMillis() / 1000) - startTimeInSeconds, avgError));
+                }
+            }
+
+            //Updates progress bar
+            if(progressBar) {
+                switch (primaryStopper) {
+                    case EPOCH:
+                        Essentials.logger.updateProgressBar(epoch, (int) epochs);
+                        break;
+                    case TIME:
+                        Essentials.logger.updateProgressBar((int) ((System.currentTimeMillis() / 1000) - startTimeInSeconds), (int) timeLimit);
+                        break;
+                    case ERROR:
+                        Essentials.logger.updateProgressBar((int) (totalError / (inputDataSet.size() * model.layers.getLast().neurons.size()) * 1000), (int) (errorThreshold * 1000));
+                        break;
+                    default:
+                        throw new RuntimeException("Unknown stopper");
                 }
             }
 
@@ -184,6 +223,7 @@ public class Training {
             epoch++;
         }
 
+        Essentials.logger.updateProgressBar(100, 100);
         Essentials.logger.logString("Training Completed! Average Error: " + avgError);
 
         return model;

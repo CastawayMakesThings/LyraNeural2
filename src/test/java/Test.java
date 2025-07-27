@@ -48,14 +48,14 @@ public class Test {
                 .setInputData(idata)
                 .setEpochLimit(30000)
                 .setOutputData(odata)
-                .setErrorThreshold(0.1)
+                .setErrorThreshold(0.01)
                 .setLearningRate(0.002)
                 .setStatusPrintInterval(10000)
+                .setPrimaryTrainingStopper(Enums.trainingStoppers.TIME)
+                .setStatusPrintingMethod("bar")
                 .setTimeLimit(60);
 
         model = trainer.train();
-        System.out.println(ModelVisualizer.getModelSummary(model));
-
         System.out.println(Running.feed(model, 3));
     }
 }
