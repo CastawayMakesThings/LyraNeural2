@@ -2,4 +2,4 @@
 Lyra neural 2 is a simple and easy ML library for Java.
 
 > [!NOTE]
-> This page is not finished yet.
+> This project is far from being finished.
