@@ -4,6 +4,7 @@ import com.equinox.lyra2.exceptions.LyraError;
 import com.equinox.lyra2.exceptions.LyraWrongDatatypeException;
 import com.equinox.lyra2.objects.LyraModel;
 import com.equinox.lyra2.processing.DatatypeConversion;
+import com.equinox.lyra2.processing.Feeding;
 import com.equinox.lyra2.processing.ModelChecker;
 import com.equinox.lyra2.processing.Training;
 
@@ -110,11 +111,22 @@ public class Trainer {
         }
         ModelChecker.checkModel(model);
 
-        //Actual training
-        LyraModel trainedModel;
-        trainedModel = Training.trainModel(model, inputData, outputData, epochsLimit,
-                limitEpochs, limitTime, timeLimit, statusPrintInterval, learningRate, threshold);
-        return trainedModel;
+        //Fires up the executor service
+        Training.startExecutor();
+        Feeding.startExecutor();
+
+        try {
+            //Actual training
+            LyraModel trainedModel;
+            trainedModel = Training.trainModel(model, inputData, outputData, epochsLimit,
+                    limitEpochs, limitTime, timeLimit, statusPrintInterval, learningRate, threshold);
+            return trainedModel;
+        } finally {
+            // Ensure executors are shut down
+            Training.endExecutor();
+            Feeding.endExecutor();
+
+        }
     }
 
     //This method returns this builder

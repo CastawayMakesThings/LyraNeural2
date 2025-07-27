@@ -8,9 +8,15 @@ import com.equinox.lyra2.processing.Feeding;
 import com.equinox.lyra2.processing.ModelChecker;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Running {
     public static Object feed(LyraModel model, Object input) {
+
+        //Starts the feeder's executor service
+        Feeding.startExecutor();
+
         ArrayList<Double> binaryData = new ArrayList<>();
 
         ModelChecker.checkModel(model);
@@ -42,6 +48,9 @@ public class Running {
         } catch (LyraWrongDatatypeException e) {
             throw new LyraError("ERROR, THERE WAS AN ISSUE CONVERTING THE BINARY OUTPUT TO THE DESIRED OUTPUT TYPE!" + e.getMessage() );
         }
+
+        //End the feeder's executor service
+        Feeding.endExecutor();
 
         return obj;
     }

@@ -45,6 +45,7 @@ public class Test {
         trainer.configure()
                 .setModel(model)
                 .setInputData(idata)
+                .setEpochLimit(30000)
                 .setOutputData(odata)
                 .setErrorThreshold(0.1)
                 .setLearningRate(0.002)
