@@ -1,6 +1,7 @@
 package com.equinox.lyra2.processing;
 
-import com.equinox.equinox_essentials.Essentials;
+import io.github.equinoxelectronic.equinox_essentials.Essentials;
+import io.github.equinoxelectronic.equinox_essentials.Essentials.*;
 import com.equinox.lyra2.Enums;
 import com.equinox.lyra2.exceptions.LyraWrongDatatypeException;
 import com.equinox.lyra2.objects.FrontLayer;

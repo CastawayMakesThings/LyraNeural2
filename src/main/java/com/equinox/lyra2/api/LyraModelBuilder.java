@@ -1,10 +1,10 @@
 package com.equinox.lyra2.api;
 
-import com.equinox.equinox_essentials.Essentials;
 import com.equinox.lyra2.Enums;
 import com.equinox.lyra2.exceptions.InvalidModelError;
 import com.equinox.lyra2.objects.LyraModel;
 import com.equinox.lyra2.processing.Initialization;
+import io.github.equinoxelectronic.equinox_essentials.Essentials;
 
 import java.util.ArrayList;
 

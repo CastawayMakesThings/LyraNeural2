@@ -1,10 +1,10 @@
 package com.equinox.lyra2.processing.lyraFile;
 
-import com.equinox.equinox_essentials.Essentials;
 import com.equinox.lyra2.objects.LyraModel;
 import com.equinox.lyra2.processing.ModelChecker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.github.equinoxelectronic.equinox_essentials.Essentials;
 
 import java.io.FileWriter;
 import java.io.IOException;

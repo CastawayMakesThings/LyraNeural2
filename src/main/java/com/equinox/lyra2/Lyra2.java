@@ -1,6 +1,7 @@
 package com.equinox.lyra2;
 
-import com.equinox.equinox_essentials.Essentials;
+
+import io.github.equinoxelectronic.equinox_essentials.Essentials;
 
 public class Lyra2 {
 

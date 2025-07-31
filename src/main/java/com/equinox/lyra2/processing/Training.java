@@ -1,12 +1,12 @@
 package com.equinox.lyra2.processing;
 
-import com.equinox.equinox_essentials.Essentials;
 import com.equinox.lyra2.Enums;
 import com.equinox.lyra2.exceptions.LyraError;
 import com.equinox.lyra2.exceptions.LyraWrongDatatypeException;
 import com.equinox.lyra2.objects.Layer;
 import com.equinox.lyra2.objects.LyraModel;
 import com.equinox.lyra2.objects.Neuron;
+import io.github.equinoxelectronic.equinox_essentials.Essentials;
 
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
@@ -212,12 +212,15 @@ public class Training {
                 goodScoreStreak++;
             }
             if(goodScoreStreak >= 5) {
+                Essentials.logger.logString("Ended training because of good score.");
                 break;
             }
             if(epoch >= epochs && shouldLimitEpochs) {
+                Essentials.logger.logString("Ended training because epoch limit reached.");
                 break;
             }
             if(shouldLimitTime && (System.currentTimeMillis() / 1000) - startTimeInSeconds >= timeLimit) {
+                Essentials.logger.logString("Ended training because time limit reached.");
                 break;
             }
             epoch++;
