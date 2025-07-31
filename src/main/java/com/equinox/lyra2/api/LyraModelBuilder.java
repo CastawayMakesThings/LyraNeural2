@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class LyraModelBuilder {
     private String modelID;
     private String modelAuthor;
-    private String modelMetadata;
+    private String modelMetadata = "";
     private ArrayList<Integer> layers = new ArrayList<>();
     private ArrayList<Enums.activationFunctions> activationFunctionPerLayer = new ArrayList<>();
     private int backLayerSize = 0;
@@ -110,7 +110,7 @@ public class LyraModelBuilder {
                 activationFunctionPerLayer.size() !=
                         layers.size() ||
                 inputType == null || outputType == null) {
-            throw new InvalidModelError("ONE OR MORE FIELDS ARE MISSING FROM MODEL BUILDER! functionperlayer: "+activationFunctionPerLayer.size()+" layers: "+layers.size());
+            throw new InvalidModelError("ONE OR MORE FIELDS ARE MISSING FROM MODEL BUILDER!");
         }
         if(inputType == Enums.IOType.RAW && frontLayerSize == 0) {
             throw new InvalidModelError("IF THE DATATYPE \"RAW\" IS SELECTED FOR THE FIRST LAYER, YOU MUST SPECIFY THE FRONT LAYER SIZE!");
@@ -118,10 +118,13 @@ public class LyraModelBuilder {
         if(outputType == Enums.IOType.RAW && backLayerSize == 0) {
             throw new InvalidModelError("IF THE DATATYPE \"RAW\" IS SELECTED FOR THE LAST LAYER, YOU MUST SPECIFY THE LAST LAYER SIZE!");
         }
+        if(modelMetadata.isEmpty() || modelMetadata.isBlank()) {
+            modelMetadata = "NONE";
+        }
 
         //Actually builds the model
         LyraModel model = new LyraModel();
-        model = Initialization.initializeModel(model, modelID, modelAuthor, inputType, outputType, layers, activationFunctionPerLayer, frontLayerSize, backLayerSize, backLayerActivationFunction);
+        model = Initialization.initializeModel(model, modelID, modelAuthor, inputType, outputType, layers, activationFunctionPerLayer, frontLayerSize, backLayerSize, backLayerActivationFunction, activationFunction);
         Essentials.logger.logString("Model built!");
         return model;
     }

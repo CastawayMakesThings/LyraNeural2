@@ -1,6 +1,8 @@
-package com.equinox.lyra2.processing;
+package com.equinox.lyra2.processing.lyraFile;
 
+import com.equinox.equinox_essentials.Essentials;
 import com.equinox.lyra2.objects.LyraModel;
+import com.equinox.lyra2.processing.ModelChecker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -8,7 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Saving {
-    public static void saveModel(String filepath, LyraModel model) {
+    public static void saveModelAsJSON(String filepath, LyraModel model) {
         //Checks to make sure model is usable
         ModelChecker.checkModel(model);
 
@@ -31,6 +33,31 @@ public class Saving {
         } catch (IOException e) {
             throw new RuntimeException("Failed to save model to " + filepath, e);
         }
+    }
+    public static void saveModel(String filepath, LyraModel model) {
+        //Checks to make sure model is usable
+        ModelChecker.checkModel(model);
+
+        //----Modifies path to contain whole path----
+        //Trims the filepath
+        filepath = filepath.trim();
+        //Checks to see if filePath contains the filename or just the directory
+        if(filepath.endsWith("/") || filepath.endsWith("\\")) {
+            filepath = filepath+ model.modelID+".lyra";
+        }
+        //Checks to see if the filePath contains the extension
+        if(!filepath.endsWith(".lyra")) {
+            filepath = filepath+".lyra";
+        }
+
+        String serializedModel = Serializer.serializeModel(model);
+
+        try (FileWriter writer = new FileWriter(filepath)) {
+            writer.write(serializedModel);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save model to " + filepath, e);
+        }
+        Essentials.logger.logString("Saved model to "+filepath +" succesfully!");
     }
 }
 

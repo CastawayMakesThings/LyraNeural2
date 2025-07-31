@@ -27,7 +27,8 @@ public class Initialization {
                                             ArrayList<Enums.activationFunctions> activationFunctions,
                                             int firstLayerSize,
                                             int lastLayerSize,
-                                            Enums.activationFunctions lastLayerActivationFunction) {
+                                            Enums.activationFunctions lastLayerActivationFunction,
+                                            Enums.activationFunctions activationFunction) {
 
         Essentials.logger.logString("Initializing model...");
 
@@ -39,6 +40,9 @@ public class Initialization {
 
         //Sets model version
         model.lyraVersion = version;
+
+        //The entire activation function
+        model.activationFunction = activationFunction;
 
         //Sets model metadata to empty
         model.metadata = "";

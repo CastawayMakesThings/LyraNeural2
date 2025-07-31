@@ -51,11 +51,13 @@ public class Test {
                 .setErrorThreshold(0.01)
                 .setLearningRate(0.002)
                 .setStatusPrintInterval(10000)
-                .setPrimaryTrainingStopper(Enums.trainingStoppers.TIME)
+                .setPrimaryTrainingStopper(Enums.trainingStoppers.EPOCH)
                 .setStatusPrintingMethod("bar")
                 .setTimeLimit(60);
 
         model = trainer.train();
         System.out.println(Running.feed(model, 3));
+
+        model.save("testModel.lyra");
     }
 }

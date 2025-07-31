@@ -2,8 +2,8 @@ package com.equinox.lyra2.objects;
 
 import com.equinox.lyra2.Enums;
 import com.equinox.lyra2.api.LyraModelBuilder;
-import com.equinox.lyra2.processing.Loading;
-import com.equinox.lyra2.processing.Saving;
+import com.equinox.lyra2.processing.lyraFile.Loading;
+import com.equinox.lyra2.processing.lyraFile.Saving;
 
 import java.util.ArrayList;
 
@@ -22,6 +22,8 @@ public class LyraModel {
     public String lyraVersion;
     //Any metadata somebody wants to add to their model.
     public String metadata;
+    //The activation function for the entire model. Will entirely replace the layer-by-layer activation functions.
+    public Enums.activationFunctions activationFunction;
 
     //This method returns the LyraModelBuilder to configure this model
     public LyraModelBuilder builder(){
@@ -43,6 +45,7 @@ public class LyraModel {
         this.outputType = loaded.outputType;
         this.lyraVersion = loaded.lyraVersion;
         this.metadata = loaded.metadata;
+        this.activationFunction = loaded.activationFunction;
     }
 }
 
