@@ -58,6 +58,13 @@
             <version>v1.1</version> <!-- make sure this tag exists and builds -->
         </dependency>
 
+        <!-- Compression -->
+        <dependency>
+            <groupId>org.tukaani</groupId>
+            <artifactId>xz</artifactId>
+            <version>1.9</version>
+        </dependency>
+
         <!-- Gson -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
