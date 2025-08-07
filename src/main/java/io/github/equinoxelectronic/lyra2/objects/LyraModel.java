@@ -1,0 +1,57 @@
+package io.github.equinoxelectronic.lyra2.objects;
+
+import io.github.equinoxelectronic.lyra2.Enums;
+import io.github.equinoxelectronic.lyra2.api.LyraModelBuilder;
+import io.github.equinoxelectronic.lyra2.processing.lyraFile.Loading;
+import io.github.equinoxelectronic.lyra2.processing.lyraFile.Saving;
+
+import java.util.ArrayList;
+
+public class LyraModel {
+    //The name of the model
+    public String modelID;
+    //The first layer of the model
+    public FrontLayer frontLayer;
+    //The rest of the layers in the model
+    public ArrayList<Layer> layers;
+    //The model author
+    public String modelAuthor;
+    //The output datatype
+    public Enums.IOType outputType;
+    //The version of Lyra that this model was made in. This is not used anywhere except for saving/loading.
+    public String lyraVersion;
+    //Any metadata somebody wants to add to their model.
+    public String metadata;
+    //The activation function for the entire model. Will entirely replace the layer-by-layer activation functions.
+    public Enums.activationFunctions activationFunction;
+
+    //This method returns the LyraModelBuilder to configure this model
+    public LyraModelBuilder builder(){
+        return new LyraModelBuilder();
+    }
+
+    //Saves this model
+    public void save(String filepath) {
+        Saving.saveModel(filepath, this);
+    }
+
+    //Loads this model
+    public void load(String filepath) {
+        LyraModel loaded = Loading.loadModel(filepath);
+        this.modelID = loaded.modelID;
+        this.frontLayer = loaded.frontLayer;
+        this.layers = loaded.layers;
+        this.modelAuthor = loaded.modelAuthor;
+        this.outputType = loaded.outputType;
+        this.lyraVersion = loaded.lyraVersion;
+        this.metadata = loaded.metadata;
+        this.activationFunction = loaded.activationFunction;
+    }
+}
+
+
+//This class is the model class. All models are an instance of this class. Note that metadata, modelID, and modelAuthor
+//don't have any effect on the actual model, and are all really just metadata.
+
+//Equinox Electronic
+

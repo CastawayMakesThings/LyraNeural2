@@ -1,0 +1,201 @@
+package io.github.equinoxelectronic.lyra2.api;
+
+import io.github.equinoxelectronic.lyra2.Enums;
+import io.github.equinoxelectronic.lyra2.exceptions.LyraError;
+import io.github.equinoxelectronic.lyra2.exceptions.LyraWrongDatatypeException;
+import io.github.equinoxelectronic.lyra2.objects.DataSet;
+import io.github.equinoxelectronic.lyra2.objects.LyraModel;
+import io.github.equinoxelectronic.lyra2.processing.DatatypeConversion;
+import io.github.equinoxelectronic.lyra2.processing.Feeding;
+import io.github.equinoxelectronic.lyra2.processing.ModelChecker;
+import io.github.equinoxelectronic.lyra2.processing.Training;
+
+import java.util.ArrayList;
+
+public class Trainer {
+    private ArrayList<ArrayList<Double>> inputData;
+    private ArrayList<ArrayList<Double>> outputData;
+    private LyraModel model;
+    private long epochsLimit; private boolean limitEpochs;
+    private long timeLimit; private boolean limitTime;
+    private double learningRate;
+    private int statusPrintInterval;
+    private double threshold = 0;
+    private Enums.trainingStoppers primaryStopper;
+    private boolean shouldUseProgressBar = false;
+
+    //The Epoch limit for training
+    public Trainer setEpochLimit(long limit) {
+        limitEpochs = true;
+        epochsLimit = limit;
+        return this;
+    }
+
+    //The time limit for training
+    public Trainer setTimeLimit(long limit) {
+        limitTime = true;
+        timeLimit = limit;
+        return this;
+    }
+
+    //The model to be trained
+    public Trainer setModel(LyraModel model) {
+        this.model = model;
+        return this;
+    }
+
+    //Sets the primary method for stopping
+    public Trainer setPrimaryTrainingStopper(Enums.trainingStoppers stopper) {
+        this.primaryStopper = stopper;
+        return this;
+    }
+
+    //Sets status printing method
+    public Trainer setStatusPrintingMethod(String statusPrintingMethod) {
+        statusPrintingMethod = statusPrintingMethod.toLowerCase();
+        switch (statusPrintingMethod) {
+            case "progressBar":
+                shouldUseProgressBar = true;
+                return this;
+            case "intervals":
+                shouldUseProgressBar = false;
+                return this;
+            case "terminal":
+                shouldUseProgressBar = false;
+                return this;
+            case "bar":
+                shouldUseProgressBar = true;
+                return this;
+            default:
+                throw new LyraError("Invalid status printing method!\n Use \"bar\" or \"intervals\".");
+        }
+    }
+
+    //Sets the input data set
+    public Trainer setInputData(ArrayList<Object> inputData) {
+        ArrayList<ArrayList<Double>> binaryObjects = new ArrayList<>();
+        //Converts the object into binary
+        for (Object o : inputData) {
+            try {
+                binaryObjects.add(DatatypeConversion.convertToBinaryArray(model.frontLayer.inputType, o));
+            } catch (LyraWrongDatatypeException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        this.inputData = binaryObjects;
+        return this;
+    }
+
+    //Sets the output dataset
+    public Trainer setOutputData(ArrayList<Object> outputData) {
+        ArrayList<ArrayList<Double>> binaryObjects = new ArrayList<>();
+        //Converts the objects in binary
+        for (Object o : outputData) {
+            try {
+                binaryObjects.add(DatatypeConversion.convertToBinaryArray(model.frontLayer.inputType, o));
+            } catch (LyraWrongDatatypeException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        this.outputData = binaryObjects;
+        return this;
+    }
+
+    //This is like setInputData and setOutputData, but takes in a DataSet
+    public Trainer setTrainingData(DataSet ds) {
+        ArrayList<ArrayList<Double>> binaryObjects = new ArrayList<>();
+        //Converts the object into binary
+        for (Object o : ds.inputs) {
+            try {
+                binaryObjects.add(DatatypeConversion.convertToBinaryArray(model.frontLayer.inputType, o));
+            } catch (LyraWrongDatatypeException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        this.inputData = binaryObjects;
+
+        for (Object o : ds.outputs) {
+            try {
+                binaryObjects.add(DatatypeConversion.convertToBinaryArray(model.frontLayer.inputType, o));
+            } catch (LyraWrongDatatypeException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        this.outputData = binaryObjects;
+
+        return this;
+    }
+
+    //Sets the interval to print status messages
+    public Trainer setStatusPrintInterval(int statusPrintInterval) {
+        this.statusPrintInterval = statusPrintInterval;
+        return this;
+    }
+
+    //Sets the learning rate for training
+    public Trainer setLearningRate(double learningRate) {
+        this.learningRate = learningRate;
+        return this;
+    }
+
+    //The error threshold. When this is reached, training will automatically stop.
+    public Trainer setErrorThreshold(double threshold) {
+        this.threshold = threshold;
+        return this;
+    }
+
+    //The actual training method
+    public LyraModel train() {
+        //Some basic checks
+        if (model == null) {
+            throw new LyraError("Model cannot be null");
+        }
+        if (inputData == null || outputData == null) {
+            throw new LyraError("Input and output data cannot be null");
+        }
+        if (learningRate <= 0) {
+            throw new LyraError("Learning rate must be positive");
+        }
+        if (statusPrintInterval < 0) {
+            throw new LyraError("Status print interval must be positive");
+        }
+        if (inputData.size() != outputData.size()) {
+            throw new LyraError("Input and output data sizes must match");
+        }
+        if (inputData.getFirst().size() != model.frontLayer.neurons.size()) {
+            throw new LyraError("Input data dimensions must match model input layer");
+        }
+        ModelChecker.checkModel(model);
+
+        //Fires up the executor service
+        Training.startExecutor();
+        Feeding.startExecutor();
+
+        try {
+            //Actual training
+            LyraModel trainedModel;
+            trainedModel = Training.trainModel(model, inputData, outputData, epochsLimit,
+                    limitEpochs, limitTime, timeLimit, statusPrintInterval, learningRate,
+                    threshold, shouldUseProgressBar, primaryStopper);
+            return trainedModel;
+        } finally {
+            // Ensure executors are shut down
+            Training.endExecutor();
+            Feeding.endExecutor();
+        }
+    }
+
+    //This method returns this builder
+    public Trainer configure(){
+        return this;
+    }
+}
+
+//===========================================================================
+//== This class is pretty much a builder that configures info for training ==
+//== a model, not much explanation is needed. Think of this as a higher-level==
+//== layer to make configuring a trainer a little more elegant.             ==
+//===========================================================================
+
+//Equinox Electronic

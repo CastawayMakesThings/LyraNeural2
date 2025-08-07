@@ -1,8 +1,7 @@
-import com.equinox.lyra2.Enums;
-import com.equinox.lyra2.api.Running;
-import com.equinox.lyra2.api.Trainer;
-import com.equinox.lyra2.api.utility.ModelVisualizer;
-import com.equinox.lyra2.objects.LyraModel;
+import io.github.equinoxelectronic.lyra2.Enums;
+import io.github.equinoxelectronic.lyra2.api.Running;
+import io.github.equinoxelectronic.lyra2.api.Trainer;
+import io.github.equinoxelectronic.lyra2.objects.LyraModel;
 
 import java.util.ArrayList;
 

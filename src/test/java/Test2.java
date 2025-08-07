@@ -1,5 +1,5 @@
-import com.equinox.lyra2.api.Running;
-import com.equinox.lyra2.objects.LyraModel;
+import io.github.equinoxelectronic.lyra2.api.Running;
+import io.github.equinoxelectronic.lyra2.objects.LyraModel;
 
 public class Test2 {
     public static void main(String[] args) {

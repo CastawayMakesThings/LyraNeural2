@@ -1,12 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>equinox</groupId>
+    <groupId>com.github.CastawayMakesThings</groupId>
     <artifactId>Lyra2</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>LyraNeural 2</name>
+    <description>A neural system library by Equinox Electronic</description>
+    <url>https://github.com/CastawayMakesThings/LyraNeural2</url>
+
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>equinoxelectronic</id>
+            <name>Equinox Electronic</name>
+            <email>djdurairaj@yahoo.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/CastawayMakesThings/LyraNeural2</url>
+        <connection>scm:git:git://github.com/CastawayMakesThings/LyraNeural2.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/CastawayMakesThings/LyraNeural2.git</developerConnection>
+        <tag>v1.0.0</tag>
+    </scm>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -14,32 +42,36 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
-
     <dependencies>
+        <!-- JUnit -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.10.2</version> <!-- You can update this to the latest -->
+            <version>5.10.2</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Essentials from JitPack -->
         <dependency>
             <groupId>com.github.EquinoxElectronic</groupId>
             <artifactId>Essentials</artifactId>
-            <version>v1.1</version>
+            <version>v1.1</version> <!-- make sure this tag exists and builds -->
         </dependency>
+
+        <!-- Gson -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
         </dependency>
-
     </dependencies>
 
+    <repositories>
+        <!-- JitPack for pulling in Essentials -->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 </project>
 
