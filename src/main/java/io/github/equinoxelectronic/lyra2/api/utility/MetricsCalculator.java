@@ -2,7 +2,22 @@ package io.github.equinoxelectronic.lyra2.api.utility;
 
 import java.util.ArrayList;
 
+/**
+ * Utility class for calculating various performance metrics in machine learning models.
+ * Provides methods to evaluate model performance through accuracy and mean squared error calculations.
+ */
 public class MetricsCalculator {
+
+    /**
+     * Calculates the accuracy of predictions compared to actual values.
+     * Accuracy is determined by counting predictions that are within 0.5 of their actual values,
+     * then dividing by the total number of predictions.
+     *
+     * @param predicted A 2D ArrayList containing the model's predicted values
+     * @param actual A 2D ArrayList containing the actual (target) values
+     * @return The accuracy as a ratio between 0.0 and 1.0
+     * @throws IllegalArgumentException if the dimensions of predicted and actual arrays don't match
+     */
     public static double calculateAccuracy(ArrayList<ArrayList<Double>> predicted,
                                            ArrayList<ArrayList<Double>> actual) {
         if (predicted.size() != actual.size()) {
@@ -26,6 +41,17 @@ public class MetricsCalculator {
         return (double) correct / total;
     }
 
+    /**
+     * Calculates the Mean Squared Error (MSE) between predicted and actual values.
+     * MSE is computed as the average of squared differences between predicted and actual values.
+     * The formula used is: MSE = (1/n) * Σ(predicted - actual)²
+     * where n is the total number of predictions.
+     *
+     * @param predicted A 2D ArrayList containing the model's predicted values
+     * @param actual A 2D ArrayList containing the actual (target) values
+     * @return The mean squared error value
+     * @throws IllegalArgumentException if the dimensions of predicted and actual arrays don't match
+     */
     public static double calculateMSE(ArrayList<ArrayList<Double>> predicted,
                                       ArrayList<ArrayList<Double>> actual) {
         if (predicted.size() != actual.size()) {

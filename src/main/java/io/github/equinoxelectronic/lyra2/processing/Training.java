@@ -14,15 +14,35 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Implements neural network training with parallel processing capabilities.
+ * Provides functionality for:
+ * - Parallel backpropagation training
+ * - Multiple training stopping criteria
+ * - Progress monitoring and reporting
+ * - Gradient clipping for training stability
+ */
 public class Training {
 
     //The executor service
+    /**
+     * Thread pool executor for parallel processing during training.
+     * Sized according to available processor cores for optimal performance.
+     */
     private static ExecutorService executor;
 
+    /**
+     * Initializes the thread pool executor for parallel training operations.
+     * Should be called before starting any training process.
+     */
     public static void startExecutor() {
         executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
 
+    /**
+     * Safely shuts down the thread pool executor.
+     * Attempts graceful shutdown with timeout before forced termination.
+     */
     public static void endExecutor() {
         if(executor != null) {
             executor.shutdown();
@@ -37,7 +57,26 @@ public class Training {
     }
 
 
-
+    /**
+     * Trains a neural network model using parallel backpropagation.
+     * Implements multiple stopping criteria and progress monitoring.
+     *
+     * @param model The neural network model to train
+     * @param inputDataSet Training input samples
+     * @param wantedOutputDataSet Target output samples
+     * @param epochs Maximum number of training epochs
+     * @param shouldLimitEpochs Whether to use epoch limit
+     * @param shouldLimitTime Whether to use time limit
+     * @param timeLimit Maximum training time in seconds
+     * @param statusPrintInterval Epochs between progress updates
+     * @param learningRate Learning rate for weight updates
+     * @param errorThreshold Error threshold for early stopping
+     * @param progressBar Whether to show progress bar
+     * @param primaryStopper Primary criterion for stopping training
+     * @return The trained neural network model
+     * @throws RuntimeException if forward pass fails
+     * @throws LyraError if training parameters are invalid
+     */
     public static LyraModel trainModel(LyraModel model,
                                        ArrayList<ArrayList<Double>> inputDataSet,
                                        ArrayList<ArrayList<Double>> wantedOutputDataSet,
@@ -235,6 +274,14 @@ public class Training {
         return Math.max(Math.min(value, threshold), -threshold);
     }
 
+    /**
+     * Performs forward pass computation with parallel neuron processing.
+     * Implements layer-wise parallelization for improved performance.
+     *
+     * @param model The neural network model
+     * @param input Input values for the forward pass
+     * @return Output values from the final layer
+     */
 private static ArrayList<Double> parallelForwardPass(LyraModel model, ArrayList<Double> input) {
     // Set input layer values
     for (int i = 0; i < model.frontLayer.neurons.size(); i++) {

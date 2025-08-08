@@ -7,23 +7,33 @@ import com.google.gson.Gson;
 import io.github.equinoxelectronic.equinox_essentials.Essentials;
 import org.tukaani.xz.XZInputStream;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Objects;
 import java.util.Scanner;
 
+/**
+ * Provides functionality for loading neural network models from files.
+ * Supports both JSON and compressed binary formats with version compatibility checking.
+ */
 public class Loading {
+
+    /**
+     * Loads a model from a JSON-formatted .lyra file.
+     * This method is provided for legacy support and debugging purposes.
+     * For production use, prefer {@link #loadModel(String)} which uses a more
+     * efficient binary format.
+     *
+     * @param filepath Path to the model file (with or without .lyra extension)
+     * @return The loaded LyraModel instance
+     * @throws RuntimeException if the file cannot be read or parsed
+     */
     public static LyraModel loadJSONModel(String filepath) {
-        //Checks if filepath is valid
         if(!(filepath.endsWith(".lyra"))) {
-            filepath = filepath+".lyra";
+            filepath = filepath + ".lyra";
         }
-        
-        //Attempts to deserialize the file.
+
         LyraModel model;
         try {
             Gson gson = new Gson();
@@ -32,7 +42,6 @@ public class Loading {
             throw new RuntimeException("Failed to load model from " + filepath, e);
         }
 
-        //Checks the lyra file
         if(model.lyraVersion != Config.version) {
             model = Versioning.updateModel(model);
         }
@@ -40,6 +49,21 @@ public class Loading {
         return model;
     }
 
+    /**
+     * Loads a model from a compressed binary .lyra file.
+     * This is the preferred method for loading models as it provides better performance
+     * and smaller file sizes compared to JSON format.
+     *
+     * The loading process includes:
+     * 1. Reading and validating the compressed file content
+     * 2. Decompressing the content
+     * 3. Parsing the model structure
+     * 4. Version compatibility checking and updating if necessary
+     *
+     * @param filepath Path to the model file (with or without .lyra extension)
+     * @return The loaded LyraModel instance
+     * @throws RuntimeException if the file cannot be read, decompressed, or parsed
+     */
     public static LyraModel loadModel(String filepath) {
         if (!(filepath.endsWith(".lyra"))) {
             filepath = filepath + ".lyra";
@@ -71,7 +95,14 @@ public class Loading {
         }
     }
 
-
+    /**
+     * Decompresses a Base64-encoded XZ-compressed string.
+     * Uses a 4KB buffer for efficient memory usage during decompression.
+     *
+     * @param compressedBase64 The Base64-encoded compressed string
+     * @return The decompressed string in UTF-8 encoding
+     * @throws IOException if decompression fails
+     */
     public static String decompressString(String compressedBase64) throws IOException {
         byte[] compressedData = Base64.getDecoder().decode(compressedBase64);
         try (ByteArrayInputStream bais = new ByteArrayInputStream(compressedData);
@@ -86,8 +117,8 @@ public class Loading {
             return baos.toString(StandardCharsets.UTF_8);
         }
     }
-
 }
+
 
 //This is a very basic class that loads up a saved model file. As you can see,
 //it uses JSON. This is definetly suboptimal for larger models, so I intend to write

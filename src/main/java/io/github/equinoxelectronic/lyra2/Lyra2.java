@@ -31,6 +31,7 @@ public class Lyra2 {
     public static void getREADME (String filepath) {
         Essentials.logger.logWarning("NO README YET!");
         //TODO Add commentation to the new utility classes
+        //TODO Add javadoc
     }
 }
 

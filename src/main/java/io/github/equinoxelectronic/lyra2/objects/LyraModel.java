@@ -7,35 +7,81 @@ import io.github.equinoxelectronic.lyra2.processing.lyraFile.Saving;
 
 import java.util.ArrayList;
 
+/**
+ * Represents a neural network model in the Lyra2 framework.
+ * Contains all components and metadata necessary for model operation,
+ * including layers, data types, and configuration information.
+ */
 public class LyraModel {
-    //The name of the model
+    /**
+     * Unique identifier for the model.
+     */
     public String modelID;
-    //The first layer of the model
+
+    /**
+     * The input layer of the neural network.
+     * Handles initial data processing and type validation.
+     */
     public FrontLayer frontLayer;
-    //The rest of the layers in the model
+
+    /**
+     * List of hidden and output layers in the network.
+     * Does not include the front (input) layer.
+     */
     public ArrayList<Layer> layers;
-    //The model author
+
+    /**
+     * Name of the model's creator or maintainer.
+     */
     public String modelAuthor;
-    //The output datatype
+
+    /**
+     * Expected data type for model outputs.
+     */
     public Enums.IOType outputType;
-    //The version of Lyra that this model was made in. This is not used anywhere except for saving/loading.
+
+    /**
+     * Version of Lyra framework used to create the model.
+     * Used for compatibility checking during model loading.
+     */
     public String lyraVersion;
-    //Any metadata somebody wants to add to their model.
+
+    /**
+     * Optional metadata for storing additional model information.
+     */
     public String metadata;
-    //The activation function for the entire model. Will entirely replace the layer-by-layer activation functions.
+
+    /**
+     * Global activation function for all layers.
+     * Replaces individual layer activation functions.
+     */
     public Enums.activationFunctions activationFunction;
 
-    //This method returns the LyraModelBuilder to configure this model
-    public LyraModelBuilder builder(){
+    /**
+     * Creates a new model builder for configuring this model.
+     *
+     * @return A new LyraModelBuilder instance
+     */
+    public LyraModelBuilder builder() {
         return new LyraModelBuilder();
     }
 
-    //Saves this model
+    /**
+     * Saves the model to a file in Lyra format.
+     * Persists all model components and configuration.
+     *
+     * @param filepath Path where the model should be saved
+     */
     public void save(String filepath) {
         Saving.saveModel(filepath, this);
     }
 
-    //Loads this model
+    /**
+     * Loads a model from a Lyra format file.
+     * Updates all current model components with loaded data.
+     *
+     * @param filepath Path to the model file to load
+     */
     public void load(String filepath) {
         LyraModel loaded = Loading.loadModel(filepath);
         this.modelID = loaded.modelID;
@@ -48,6 +94,7 @@ public class LyraModel {
         this.activationFunction = loaded.activationFunction;
     }
 }
+
 
 
 //This class is the model class. All models are an instance of this class. Note that metadata, modelID, and modelAuthor

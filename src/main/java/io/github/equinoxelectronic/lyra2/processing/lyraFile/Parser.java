@@ -10,58 +10,93 @@ import io.github.equinoxelectronic.lyra2.objects.Neuron;
 
 import java.util.ArrayList;
 
+/**
+ * Parser for Lyra model files. Converts the string representation of a model
+ * into a fully instantiated LyraModel object.
+ *
+ * File Format Specification:
+ * - Fields are separated by the '␞' character
+ * - Layers are separated by '/'
+ * - Neurons within a layer are separated by ';'
+ * - Neuron bias and weights are separated by '^'
+ * - Weights are separated by ','
+ */
 public class Parser {
+
+    /**
+     * Parses a string representation of a Lyra model file and constructs a LyraModel object.
+     * The parsing process includes:
+     * 1. Validation of file header and version
+     * 2. Extraction of model metadata (ID, author, version)
+     * 3. Configuration of model parameters (I/O types, activation function)
+     * 4. Construction of network architecture (layers and neurons)
+     * 5. Population of neuron weights and biases
+     *
+     * File Structure:
+     * [0] - Header and version
+     * [1] - Model ID
+     * [2] - Model author
+     * [3] - Metadata
+     * [4] - Lyra version
+     * [5] - Input type
+     * [6] - Output type
+     * [7] - Activation function
+     * [8] - Front layer size
+     * [9] - Network layers data
+     *
+     * @param fileContent String containing the model data in Lyra format
+     * @return Fully constructed and configured LyraModel instance
+     * @throws LyraModelLoadingError if the file format is invalid or version is incompatible
+     */
     public static LyraModel parseModelFile(String fileContent) throws LyraModelLoadingError {
-        // Split the content by the file separator character
         String[] parts = fileContent.split("␞");
 
-        // Verify header
+        // Verify header and version
         if (!parts[0].startsWith(Config.lyraFileHeader + Config.fileVersion)) {
             throw new LyraModelLoadingError("Invalid file format or version mismatch");
         }
 
-        // Create new model and set basic properties
+        // Initialize model and set metadata
         LyraModel model = new LyraModel();
         model.modelID = parts[1];
         model.modelAuthor = parts[2];
         model.metadata = parts[3];
         model.lyraVersion = parts[4];
 
-        // Set input/output types
+        // Configure I/O types
         Enums.IOType inputType = Enums.IOType.valueOf(parts[5]);
         model.outputType = Enums.IOType.valueOf(parts[6]);
 
         // Set activation function
         model.activationFunction = Enums.activationFunctions.valueOf(parts[7]);
 
-        // Create front layer
+        // Initialize input layer
         int frontLayerSize = Integer.parseInt(parts[8]);
         model.frontLayer = new FrontLayer(frontLayerSize, inputType);
 
-        // Process layers
+        // Parse and construct network layers
         String[] layersData = parts[9].split("/");
         model.layers = new ArrayList<>();
 
-        // For each layer
         for (String layerData : layersData) {
             if (layerData.isEmpty()) continue;
 
-            // Split into neurons
+            // Parse neurons in current layer
             String[] neuronsData = layerData.split(";");
             Layer layer = new Layer(neuronsData.length, model.activationFunction);
 
-            // For each neuron in the layer
+            // Configure each neuron
             for (int i = 0; i < neuronsData.length; i++) {
                 if (neuronsData[i].isEmpty()) continue;
 
-                // Split into bias and weights
+                // Parse bias and weights
                 String[] neuronParts = neuronsData[i].split("\\^");
                 Neuron neuron = layer.neurons.get(i);
 
-                // Set bias
+                // Set bias value
                 neuron.bias = Double.parseDouble(neuronParts[0]);
 
-                // Set weights
+                // Parse and set weights
                 String[] weightStrings = neuronParts[1].split(",");
                 neuron.weights = new ArrayList<>();
                 for (String w : weightStrings) {
@@ -77,6 +112,7 @@ public class Parser {
         return model;
     }
 }
+
 
 
 //This is a simple parser that takes in a string version of a model and spits out a complete model.

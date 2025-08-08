@@ -7,8 +7,30 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Utility class for reading training data from CSV files.
+ * This class provides functionality to parse CSV files containing input and output data
+ * for machine learning training purposes.
+ */
 public class CSV {
 
+    /**
+     * Reads training data from a CSV file and converts it into a DataSet object.
+     * The CSV file should have two sections separated by a tilde (~) character:
+     * the input values and the output values. Each section's values should be
+     * separated by the specified delimiter.
+     *
+     * The method handles the following cases:
+     * - Skips the header row if it contains "input" or "output" (case-insensitive)
+     * - Ignores malformed lines (lines not containing both input and output sections)
+     * - Skips non-numeric values
+     * - Ignores empty values after trimming
+     *
+     * @param filepath  the path to the CSV file to be read
+     * @param delimiter the character or string used to separate values within input and output sections
+     * @return a DataSet object containing the parsed input and output values
+     * @throws RuntimeException if an error occurs while reading the file
+     */
     public static DataSet readTrainingData(String filepath, String delimiter) {
         ArrayList<ArrayList<Double>> inputs = new ArrayList<>();
         ArrayList<ArrayList<Double>> outputs = new ArrayList<>();
@@ -71,6 +93,7 @@ public class CSV {
         return new DataSet(inputs, outputs);
     }
 }
+
 
 //This is a simple class that converts serialized CSV data into a DataSet that the model can read.
 
