@@ -14,7 +14,48 @@ Perfect for those looking to implement neural networks in Java without the compl
 ## Quickstart
 > [!NOTE]
 > This is not a guide on how to use AI, you should already know tha basics of machine learning to be able to use Lyra2. 3Blue1Brown has a great tutorial on YouTube.
-> The first step of using Lyra2 is to create a `LyraModel` object. You can create this simply by using
+
+First things first, you need to download Lyra2. You can get the latest release on GitHub,
+or you can use the Jitpack version:
+
+### Maven:
+
+```xml
+	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+
+    <!--And put this in the dependencies section-->
+
+	<dependency>
+	    <groupId>com.github.CastawayMakesThings</groupId>
+	    <artifactId>LyraNeural2</artifactId>
+	    <version>1.0.0-release</version> <!--Replace this with the latest version-->
+	</dependency>
+```
+
+### Gradle
+
+```gradle
+
+    //Add this to your settings.gradle
+    	dependencyResolutionManagement {
+		repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+		repositories {
+			mavenCentral()
+			maven { url 'https://jitpack.io' }
+		}
+	}
+
+    //Add this to the dependencies in the build.gradle
+	dependencies {
+	        implementation 'com.github.CastawayMakesThings:LyraNeural2:1.0.0-release' //Replace that version eith the latest
+	}
+```
+The first step of using Lyra2 is to create a `LyraModel` object. You can create this simply by using
 
 ```java
 import io.github.equinoxelectronic.lyra2.objects.LyraModel;
