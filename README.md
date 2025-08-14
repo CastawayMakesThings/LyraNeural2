@@ -10,6 +10,7 @@ LyraNeural 2 is a lightweight neural network library for Java, designed with sim
 - Customizable network architectures
 
 Perfect for those looking to implement neural networks in Java without the complexity of larger frameworks.
+![Static Badge](https://img.shields.io/badge/LyraNeural2-1.0.0%E2%80%93release-blue?style=plastic)
 
 ## Quickstart
 > [!NOTE]
