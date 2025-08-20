@@ -81,8 +81,9 @@ public class ModelChecker {
         if (model.frontLayer == null || model.layers == null || model.modelID == null) {
             throw new InvalidModelError("One or more model fields are null");
         }
-        if (!(model.layers.size() > 2)) {
-            throw new InvalidModelError("Model does not have enough layers to be fed");
+        // Require at least one layer (hidden or output). Front layer is not counted in model.layers.
+        if (model.layers.isEmpty()) {
+            throw new InvalidModelError("Model must have at least one layer (hidden or output)");
         }
     }
 

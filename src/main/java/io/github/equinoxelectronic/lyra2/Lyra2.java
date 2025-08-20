@@ -26,13 +26,6 @@ public class Lyra2 {
         }
         System.out.println("Haha, just kidding. Equinox Electronic for now is just me, AnotherCastaway. Hope you like it. ✨\nGitHub: CastawayMakesThings");
     }
-
-    //This method will return the README so that people don't have to go online to get it
-    public static void getREADME (String filepath) {
-        Essentials.logger.logWarning("NO README YET!");
-        //TODO Add commentation to the new utility classes
-        //TODO Add javadoc
-    }
 }
 
 //=================================

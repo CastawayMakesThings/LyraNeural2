@@ -89,8 +89,10 @@ public class LyraModelBuilder {
      */
     public LyraModelBuilder setActivationFunction(Enums.activationFunctions s) {
         activationFunction = s;
+        // Ensure activationFunctionPerLayer size matches layers size and fill all entries
+        activationFunctionPerLayer = new ArrayList<>();
         for (int i = 0; i < layers.size(); i++) {
-            activationFunctionPerLayer.set(i, activationFunction);
+            activationFunctionPerLayer.add(activationFunction);
         }
         return this;
     }
@@ -133,6 +135,15 @@ public class LyraModelBuilder {
      */
     public LyraModelBuilder setModelArchitecture(ArrayList<Integer> architecture) {
         layers = architecture;
+        // If an activation function has already been chosen, mirror it across all layers
+        if (activationFunction != null) {
+            activationFunctionPerLayer = new ArrayList<>();
+            for (int i = 0; i < layers.size(); i++) {
+                activationFunctionPerLayer.add(activationFunction);
+            }
+        } else {
+            activationFunctionPerLayer = new ArrayList<>();
+        }
         return this;
     }
 
@@ -146,6 +157,15 @@ public class LyraModelBuilder {
         layers = new ArrayList<>();
         for (int size : architecture) {
             layers.add(size);
+        }
+        // If an activation function has already been chosen, mirror it across all layers
+        if (activationFunction != null) {
+            activationFunctionPerLayer = new ArrayList<>();
+            for (int i = 0; i < layers.size(); i++) {
+                activationFunctionPerLayer.add(activationFunction);
+            }
+        } else {
+            activationFunctionPerLayer = new ArrayList<>();
         }
         return this;
     }

@@ -33,7 +33,7 @@
         <url>https://github.com/CastawayMakesThings/LyraNeural2</url>
         <connection>scm:git:git://github.com/CastawayMakesThings/LyraNeural2.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/CastawayMakesThings/LyraNeural2.git</developerConnection>
-        <tag>v1.0.0</tag>
+        <tag>v1.0.1</tag>
     </scm>
 
     <properties>
@@ -51,12 +51,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Essentials from JitPack -->
-        <dependency>
-            <groupId>com.github.EquinoxElectronic</groupId>
-            <artifactId>Essentials</artifactId>
-            <version>v1.1</version> <!-- make sure this tag exists and builds -->
-        </dependency>
 
         <!-- Compression -->
         <dependency>
@@ -73,12 +67,5 @@
         </dependency>
     </dependencies>
 
-    <repositories>
-        <!-- JitPack for pulling in Essentials -->
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
 </project>
 
