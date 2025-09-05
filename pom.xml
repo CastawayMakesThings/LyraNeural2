@@ -6,7 +6,7 @@
 
     <groupId>com.github.CastawayMakesThings</groupId>
     <artifactId>Lyra2</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
     <name>LyraNeural 2</name>
@@ -33,7 +33,7 @@
         <url>https://github.com/CastawayMakesThings/LyraNeural2</url>
         <connection>scm:git:git://github.com/CastawayMakesThings/LyraNeural2.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/CastawayMakesThings/LyraNeural2.git</developerConnection>
-        <tag>v1.0.1</tag>
+        <tag>v1.0.2</tag>
     </scm>
 
     <properties>
