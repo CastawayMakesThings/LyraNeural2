@@ -49,7 +49,13 @@ public class Enums {
         /** 64-bit integer values */
         LONG,
         /** 16-bit character values */
-        CHAR
+        CHAR,
+        /** 8-bit integer values */
+        BYTE,
+        /** 16-bit integer values */
+        SHORT,
+        /** 1-bit boolean values */
+        BOOLEAN
     }
 
     /**

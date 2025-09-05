@@ -17,6 +17,9 @@ import java.util.ArrayList;
  * - DOUBLE: 64-bit floating point
  * - LONG: 64-bit integer
  * - CHAR: 8-bit character
+ * - BYTE: 8-bit integer (byte)
+ * - SHORT: 16-bit integer (short)
+ * - BOOLEAN: 1-bit boolean
  */
 public class DatatypeConversion {
 
@@ -28,7 +31,9 @@ public class DatatypeConversion {
      * Bit lengths for different types:
      * - INTEGER/FLOAT: 32 bits
      * - DOUBLE/LONG: 64 bits
-     * - CHAR: 8 bits
+     * - CHAR/BYTE: 8 bits
+     * - SHORT: 16 bits
+     * - BOOLEAN: 1 bit
      * - RAW: Passed through as-is
      *
      * @param inputType The type of input being converted
@@ -81,6 +86,25 @@ public class DatatypeConversion {
                 }
                 yield binaryList;
             }
+            case BYTE -> {
+                byte value = (Byte) input;
+                for (int i = 7; i >= 0; i--) {
+                    binaryList.add((double) ((value >>> i) & 1));
+                }
+                yield binaryList;
+            }
+            case SHORT -> {
+                short value = (Short) input;
+                for (int i = 15; i >= 0; i--) {
+                    binaryList.add((double) ((value >>> i) & 1));
+                }
+                yield binaryList;
+            }
+            case BOOLEAN -> {
+                boolean value = (Boolean) input;
+                binaryList.add(value ? 1.0 : 0.0);
+                yield binaryList;
+            }
             default -> throw new LyraWrongDatatypeException("Unsupported type");
         };
     }
@@ -110,6 +134,14 @@ public class DatatypeConversion {
             case DOUBLE -> Double.longBitsToDouble(bitsToLong(binaryArray, 64));
             case LONG -> bitsToLong(binaryArray, 64);
             case CHAR -> (char) bitsToInt(binaryArray, 8);
+            case BYTE -> (byte) bitsToInt(binaryArray, 8);
+            case SHORT -> (short) bitsToInt(binaryArray, 16);
+            case BOOLEAN -> {
+                if (binaryArray.size() != 1) {
+                    throw new LyraWrongDatatypeException("Invalid bit size for BOOLEAN: " + binaryArray.size());
+                }
+                yield binaryArray.get(0).intValue() == 1;
+            }
             default -> throw new LyraWrongDatatypeException("Unsupported output type");
         };
     }
@@ -126,7 +158,9 @@ public class DatatypeConversion {
             case RAW -> -1;
             case INTEGER, FLOAT -> 32;
             case DOUBLE, LONG -> 64;
-            case CHAR -> 8;
+            case CHAR, BYTE -> 8;
+            case SHORT -> 16;
+            case BOOLEAN -> 1;
             default -> throw new LyraWrongDatatypeException("Unknown type");
         };
     }
@@ -149,6 +183,9 @@ public class DatatypeConversion {
             case DOUBLE -> input instanceof Double;
             case LONG -> input instanceof Long;
             case CHAR -> input instanceof Character;
+            case BYTE -> input instanceof Byte;
+            case SHORT -> input instanceof Short;
+            case BOOLEAN -> input instanceof Boolean;
         };
     }
 
