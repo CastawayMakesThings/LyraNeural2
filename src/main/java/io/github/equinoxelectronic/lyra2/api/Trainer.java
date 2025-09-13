@@ -29,6 +29,7 @@ public class Trainer {
     private double threshold = 0;
     private Enums.trainingStoppers primaryStopper;
     private boolean shouldUseProgressBar = false;
+    private Enums.computeDevices computeDevice = Enums.computeDevices.CPU_MULTI;
 
     /**
      * Sets the maximum number of training epochs.
@@ -203,6 +204,18 @@ public class Trainer {
     }
 
     /**
+     * Sets the compute device to use during training (CPU single-thread, CPU multi-thread, or GPU).
+     * GPU is currently not implemented and will throw an error if selected.
+     *
+     * @param device The compute device selection
+     * @return This trainer instance for method chaining
+     */
+    public Trainer setComputeDevice(Enums.computeDevices device) {
+        this.computeDevice = device;
+        return this;
+    }
+
+    /**
      * Executes the training process with the configured parameters.
      * Validates all parameters before starting training.
      *
@@ -238,8 +251,9 @@ public class Trainer {
         }
         ModelChecker.checkModel(model);
 
-        Training.startExecutor();
-        Feeding.startExecutor();
+        // Initialize compute backends
+        Training.startExecutor(computeDevice);
+        Feeding.startExecutor(computeDevice);
 
         try {
             return Training.trainModel(model, inputData, outputData, epochsLimit,

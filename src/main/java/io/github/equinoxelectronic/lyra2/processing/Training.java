@@ -35,8 +35,20 @@ public class Training {
      * Initializes the thread pool executor for parallel training operations.
      * Should be called before starting any training process.
      */
-    public static void startExecutor() {
-        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    public static void startExecutor(Enums.computeDevices device) {
+        switch (device) {
+            case CPU_SINGLE:
+                executor = Executors.newSingleThreadExecutor();
+                break;
+            case CPU_MULTI:
+                executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+                break;
+            case GPU:
+                // Use a CPU pool for backprop/updates while forward-pass may run on GPU
+                executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+            default:
+                executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        }
     }
 
     /**

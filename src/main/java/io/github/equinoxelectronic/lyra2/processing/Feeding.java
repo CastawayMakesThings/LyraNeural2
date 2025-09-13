@@ -1,7 +1,12 @@
 package io.github.equinoxelectronic.lyra2.processing;
 
+import io.github.equinoxelectronic.lyra2.Enums;
+import io.github.equinoxelectronic.lyra2.exceptions.LyraError;
 import io.github.equinoxelectronic.lyra2.exceptions.LyraWrongDatatypeException;
 import io.github.equinoxelectronic.lyra2.objects.LyraModel;
+
+import com.aparapi.Kernel;
+import com.aparapi.Range;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -22,12 +27,34 @@ public class Feeding {
      */
     public static ExecutorService executor;
 
+    // Tracks the selected compute device for feed-forward
+    private static Enums.computeDevices currentDevice = Enums.computeDevices.CPU_MULTI;
+
     /**
      * Initializes the thread pool executor for parallel processing.
      * Should be called before performing any feed-forward operations.
      */
+    public static void startExecutor(Enums.computeDevices device) {
+        currentDevice = device;
+        switch (device) {
+            case CPU_SINGLE:
+                executor = Executors.newSingleThreadExecutor();
+                break;
+            case CPU_MULTI:
+                executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+                break;
+            case GPU:
+                // For GPU mode, Aparapi manages device execution; still keep a small pool if needed
+                executor = Executors.newFixedThreadPool(Math.max(1, Runtime.getRuntime().availableProcessors() / 2));
+                break;
+            default:
+                executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        }
+    }
+
+    // Backwards-compatible default: multi-threaded CPU
     public static void startExecutor() {
-        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        startExecutor(Enums.computeDevices.CPU_MULTI);
     }
 
     /**
@@ -50,6 +77,10 @@ public class Feeding {
     public static ArrayList<Double> feedForward(LyraModel model, ArrayList<Double> binaryData)
             throws LyraWrongDatatypeException {
         ModelChecker.checkModel(model);
+
+        if (currentDevice == Enums.computeDevices.GPU) {
+            return feedForwardGPU(model, binaryData);
+        }
 
         // Initialize input layer
         for (int i = 0; i < model.frontLayer.neurons.size(); i++) {
@@ -154,6 +185,85 @@ public class Feeding {
         value = ActivationMethods.activate(value,
                 model.layers.get(layerIndex).activationFunction);
         model.layers.get(layerIndex).neurons.get(neuronIndex).value = value;
+    }
+
+    //================ GPU forward path using Aparapi ================
+    private static ArrayList<Double> feedForwardGPU(LyraModel model, ArrayList<Double> binaryData) {
+        // set input layer from binaryData
+        for (int i = 0; i < model.frontLayer.neurons.size(); i++) {
+            model.frontLayer.neurons.get(i).value = binaryData.get(i);
+        }
+
+        // process each layer using a kernel that computes one neuron per work-item
+        for (int layerIdx = 0; layerIdx < model.layers.size(); layerIdx++) {
+            final int prevSize = (layerIdx == 0) ? model.frontLayer.neurons.size() : model.layers.get(layerIdx - 1).neurons.size();
+            final int outSize = model.layers.get(layerIdx).neurons.size();
+
+            // build prev activations array
+            float[] prev = new float[prevSize];
+            if (layerIdx == 0) {
+                for (int i = 0; i < prevSize; i++) prev[i] = (float) model.frontLayer.neurons.get(i).value;
+            } else {
+                for (int i = 0; i < prevSize; i++) prev[i] = (float) model.layers.get(layerIdx - 1).neurons.get(i).value;
+            }
+
+            // flatten weights row-major: neuron j has weights at [j*prevSize .. j*prevSize+prevSize)
+            float[] weights = new float[outSize * prevSize];
+            float[] bias = new float[outSize];
+            for (int j = 0; j < outSize; j++) {
+                bias[j] = (float) model.layers.get(layerIdx).neurons.get(j).bias;
+                for (int k = 0; k < prevSize; k++) {
+                    weights[j * prevSize + k] = (float) model.layers.get(layerIdx).neurons.get(j).weights.get(k).doubleValue();
+                }
+            }
+
+            final int activationId = mapActivation(model.layers.get(layerIdx).activationFunction);
+            final float[] out = new float[outSize];
+
+            Kernel kernel = new Kernel() {
+                @Override public void run() {
+                    int gid = getGlobalId();
+                    float sum = 0f;
+                    for (int k = 0; k < prevSize; k++) {
+                        sum += prev[k] * weights[gid * prevSize + k];
+                    }
+                    sum += bias[gid];
+                    // activation
+                    if (activationId == 0) { // RELU
+                        sum = sum > 0f ? sum : 0f;
+                    } else if (activationId == 1) { // LEAKY_RELU
+                        sum = sum > 0f ? sum : 0.01f * sum;
+                    } else if (activationId == 2) { // TANH
+                        // tanh via sigmoid formula
+                        float ex = (float)exp(-2f * sum);
+                        sum = (2f / (1f + ex)) - 1f;
+                    } else { // default
+                        // identity
+                    }
+                    out[gid] = sum;
+                }
+            };
+            kernel.execute(Range.create(outSize));
+            kernel.dispose();
+
+            // write back to model
+            for (int j = 0; j < outSize; j++) {
+                model.layers.get(layerIdx).neurons.get(j).value = (double) out[j];
+            }
+        }
+
+        ArrayList<Double> output = new ArrayList<>();
+        for (int i = 0; i < model.layers.getLast().neurons.size(); i++) {
+            output.add(model.layers.getLast().neurons.get(i).value);
+        }
+        return output;
+    }
+
+    private static int mapActivation(Enums.activationFunctions fn) {
+        if (fn == Enums.activationFunctions.RELU) return 0;
+        if (fn == Enums.activationFunctions.LEAKY_RELU) return 1;
+        if (fn == Enums.activationFunctions.TANH) return 2;
+        return -1; // identity fallback
     }
 }
 

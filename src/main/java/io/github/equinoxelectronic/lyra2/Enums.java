@@ -74,6 +74,19 @@ public class Enums {
         /** Stop training when error falls below threshold */
         ERROR
     }
+
+    /**
+     * Compute device selection for training/inference execution.
+     * GPU is a placeholder and not yet implemented.
+     */
+    public enum computeDevices {
+        /** Single-threaded CPU execution */
+        CPU_SINGLE,
+        /** Multi-threaded CPU execution */
+        CPU_MULTI,
+        /** GPU execution (not yet implemented) */
+        GPU
+    }
 }
 
 

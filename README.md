@@ -27,6 +27,7 @@ LyraNeural 2 is a lightweight neural network library for Java, designed with sim
 - Support for multiple activation functions (ReLU, Leaky ReLU, TanH)
 - Efficient model serialization and loading
 - Parallel processing for improved training performance
+- Selectable training execution mode: CPU single-thread, CPU multi-thread (default), GPU (Aparapi-accelerated forward pass)
 - Built-in data type conversion handling
 - Customizable network architectures
 
@@ -123,6 +124,7 @@ public class Main {
                 .setLearningRate(0.002) // The learning rate
                 .setPrimaryTrainingStopper(Enums.trainingStoppers.EPOCH) // Affects the status unit on the loading bar
                 .setStatusPrintingMethod("bar") // Display status as a loading bar rather than occasional updates
+                .setComputeDevice(Enums.computeDevices.CPU_MULTI) // Choose CPU_SINGLE for single-thread, CPU_MULTI for multi-thread (default)
                 .setTimeLimit(60); // Time limit in seconds
     }
 }
@@ -153,6 +155,26 @@ public class Main {
     }
 }
 ```
+
+### Training execution mode
+- You can control how training runs via the compute device:
+  - CPU_SINGLE: single-threaded CPU (deterministic but slower)
+  - CPU_MULTI: multi-threaded CPU (default)
+  - GPU: Aparapi-accelerated forward pass. Requires an OpenCL-capable GPU/driver. Falls back to CPU (via Aparapi JTP) if no GPU is available.
+
+Example:
+
+```java
+trainer.configure()
+       .setComputeDevice(Enums.computeDevices.GPU)
+       .setEpochLimit(30000)
+       // ... other settings
+       ;
+```
+
+Notes:
+- Current GPU support accelerates the forward pass during training and inference; backpropagation and weight updates remain on CPU for stability.
+- Install up-to-date GPU drivers with OpenCL runtime. If OpenCL is unavailable, Aparapi will automatically run on a multi-threaded CPU backend.
 
 ## Documentation
 - Javadoc (local): see the `docs/` directory in this repository. Open `docs/index-files/index-1.html` or `docs/io/github/equinoxelectronic/lyra2/package-summary.html` in a browser.

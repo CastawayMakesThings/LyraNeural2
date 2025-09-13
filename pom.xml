@@ -51,6 +51,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Aparapi for GPU acceleration -->
+        <dependency>
+            <groupId>com.aparapi</groupId>
+            <artifactId>aparapi</artifactId>
+            <version>3.0.0</version>
+        </dependency>
 
         <!-- Compression -->
         <dependency>
@@ -66,6 +72,17 @@
             <version>2.10.1</version>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>sonatype-oss</id>
+            <url>https://oss.sonatype.org/content/repositories/releases/</url>
+        </repository>
+    </repositories>
 
 </project>
 
